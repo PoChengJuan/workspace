@@ -1,0 +1,42 @@
+@import '~antd/dist/antd.css';
+@import '../Components/AreaChart.css'
+
+
+.Footer{
+    background: white;
+    padding: 4px 8px;
+    min-width: 10vh;
+}
+.Sider{
+    background: #ccedfc;
+    width: 10vh;
+
+}
+.Dropdown{
+    margin-left: 1cm;
+}
+.User{
+    align-self: right;
+}
+.CSILOGO{
+    width: auto;
+    height: 1.5cm;
+    margin: 0%;
+    margin-left: 0.5cm;
+    margin-right: 2cm;
+}
+ul{
+    margin: 0% auto;
+    font-size: 18px;
+}
+
+.SiberItem{
+    margin-top: 1.5cm;
+}
+.Sider ul li{
+    margin: 10%;
+}
+.Header .Avater{
+    position: absolute;
+    right: 2cm;
+}

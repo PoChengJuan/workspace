@@ -1,5 +1,9 @@
+@import '~antd/dist/antd.css';
 .App {
   text-align: center;
+  background-color: #e4f7ff;
+  min-height: 100vh;
+
 }
 
 .App-logo {
@@ -9,20 +13,28 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #e4f7ff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: black;
 }
 
 .App-link {
   color: #61dafb;
 }
-
+.Header{
+  background: #ccedfc;
+  flex-direction: row;
+}
+.Content{
+  margin: 0%;
+  background: #e4f7ff;
+  min-height: 100vh;
+}
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -30,4 +42,32 @@
   to {
     transform: rotate(360deg);
   }
+}
+.App p{
+  margin-bottom: 0%;
+  text-align: right;
+}
+img{
+  margin-top: 1cm;
+  margin-bottom: 2cm;
+}
+.LoginContent{
+  align-items: center;
+}
+.Content{
+  margin: 0% auto;
+}
+.UserInput{
+  width: auto;
+}
+.ListName{
+  text-align: left;
+}
+.Number{
+  position: absolute;
+  right: 0.5cm;
+  width: 50px;
+}
+.Upload{
+  margin-top: 0.5cm;
 }
