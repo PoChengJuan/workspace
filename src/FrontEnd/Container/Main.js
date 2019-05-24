@@ -29,12 +29,12 @@ const routes = [
   },
   {
     path: "/test",
-    main: () => <BarChartItem />
+    main: () => <BarChartItem width={1500} height={700} />
   }
 ];
 
-
-const menu = (
+const Shop = (
+  
   <Menu>
     <Menu.Item key="0" selectable>
       康樂總店
@@ -67,6 +67,7 @@ class MainPage extends React.Component{
   }
   ShopChangeHandle(e){
     console.log(this.props);
+    this.setState({Shop:"13"})
   }
   render(){
     return(
@@ -74,14 +75,14 @@ class MainPage extends React.Component{
         <Layout>
           <Header className="Header">
             <img className="CSILOGO" src={CSILogo} alt="CSILOGO" />
-            <Dropdown onClick={this.ShopChangeHandle.bind(this)} className="Dropdown" overlay={menu} trigger={['hover']}>
+            <Popover content={content} title="ID" trigger="click">
+              <Avatar shape="square" icon="user" />    
+            </Popover>
+            <Dropdown onVisibleChange={this.ShopChangeHandle.bind(this)}  className="Dropdown" overlay={Shop} trigger={['hover']}>
               <a className="ant-dropdown-link" href="#">
                 {this.state.Shop} <Icon type="down" />
               </a>
             </Dropdown>
-            <Popover content={content} title="ID" trigger="click">
-              <Avatar shape="square" icon="user" />    
-            </Popover>
           </Header>
           <Layout>
             <Router>
@@ -106,8 +107,8 @@ class MainPage extends React.Component{
                 </div>
               </Sider>
               <Content className="Content">
-                <div style={{ display: "flex" }}>
-                  <div style={{ flex: 1, padding: "10px" }}>
+                <div style={{ display: "flex",width: "100%",height: "100%" }}>
+                  <div style={{ flex: 1, padding: "10px", width: "0%" }}>
                     {routes.map((route, index) => (
                       // Render more <Route>s with the same paths as
                       // above, but different components this time.

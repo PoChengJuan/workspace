@@ -1,7 +1,8 @@
 import React from 'react';
 import './User.css'
 import { Row, Col, Layout, Button } from 'antd';
-import { List, Icon, Popover, Avatar, Input } from 'antd';
+import { List, Icon, Popover, Avatar, InputNumber } from 'antd';
+import axios from 'axios'
 
 const { Header, Content } = Layout;
 const content = (
@@ -43,7 +44,7 @@ class UserPage extends React.Component{
                       dataSource={data}
                       renderItem={item => (
                         <List.Item>
-                          {item} <Input className="Number" />
+                          {item} <InputNumber className="Number" /><InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />
                         </List.Item>
                       )}
                     />
@@ -56,6 +57,17 @@ class UserPage extends React.Component{
         </Row>
       </div>
     )
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount');
+    axios.get('http://localhost:8080/ShopData/get')
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 }
 

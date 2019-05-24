@@ -50,10 +50,10 @@ export default class BarChartItem extends React.Component {
 
   render() {
     return (
-        <div className="BarChartItem">
+      <div>
             <BarChart
-                width={1500}
-                height={700}
+                width={this.props.width}
+                height={this.props.height}
                 data={data}
                 margin={{
                 top: 5, right: 30, left: 20, bottom: 5,
@@ -66,10 +66,59 @@ export default class BarChartItem extends React.Component {
                 <Legend />
                 <Bar dataKey="pv" fill="#8884d8" minPointSize={5}>
                 <LabelList dataKey="name" content={renderCustomizedLabel} />
+                
                 </Bar>
                 <Bar dataKey="uv" fill="#82ca9d" minPointSize={10} />
             </BarChart>
-        </div>
-    );
+            <h1 onClick={this.handleClick}>{this.state.date.toLocaleTimeString()} Hi, {this.props.name}</h1>
+            </div>
+  );
   }
+  constructor(props) {
+    super(props);
+    console.log('constructor');
+    this.handleClick = this.handleClick.bind(this);
+    this.state = {date: new Date()};
+  }
+
+  handleClick() {
+    console.log(this)
+    this.setState({date: new Date()});
+  }
+
+  componentWillMount() {
+    console.log('componentWillMount');
+  }
+  updateDimensions(){
+    console.log("updateDimensions");
+  }
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  componentWillReceiveProps() {
+    console.log('componentWillReceiveProps');
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('shouldComponentUpdate');
+    console.log('nextProps:'+nextProps.name);
+    console.log('nextState:'+nextState.date);
+    return true;
+  }
+
+  componentWillUpdate() {
+    console.log('componentWillUpdate');
+  }
+
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+
+  }
+
 }

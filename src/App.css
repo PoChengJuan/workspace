@@ -29,6 +29,8 @@
 .Header{
   background: #ccedfc;
   flex-direction: row;
+  padding-right: 5%;
+  padding-left: 5%;
 }
 .Content{
   margin: 0%;
@@ -43,13 +45,11 @@
     transform: rotate(360deg);
   }
 }
-.App p{
-  margin-bottom: 0%;
-  text-align: right;
-}
+
 img{
   margin-top: 1cm;
   margin-bottom: 2cm;
+  width: 4cm;
 }
 .LoginContent{
   align-items: center;
@@ -62,11 +62,6 @@ img{
 }
 .ListName{
   text-align: left;
-}
-.Number{
-  position: absolute;
-  right: 0.5cm;
-  width: 50px;
 }
 .Upload{
   margin-top: 0.5cm;

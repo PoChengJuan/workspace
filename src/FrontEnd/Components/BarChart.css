@@ -1,3 +1,36 @@
 .BarChartItem{
     margin-top: 1cm;
+    flex:1;
+
+}/*
+.recharts-wrapper {
+    flex:1;
+    flex-basis: auto;
+    width: 100% !important;
+    display: flex;
 }
+.recharts-surface{
+    flex:1;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+
+}
+.recharts-legend-wrapper {
+    flex:1;
+    width: 100% !important;
+    height: auto !important;
+    display: flex;
+}
+.recharts-layer{
+    flex:1;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex;
+}
+.recharts-tooltip-wrapper{
+    flex:1;
+    width: auto !important;
+    height: auto !important;
+    display: flex;
+}*/
