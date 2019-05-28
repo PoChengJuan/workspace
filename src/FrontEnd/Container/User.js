@@ -44,7 +44,7 @@ class UserPage extends React.Component{
                       dataSource={data}
                       renderItem={item => (
                         <List.Item>
-                          {item} <InputNumber className="Number" /><InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />
+                          {item} <InputNumber className="Number" defaultValue='0'/><InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />
                         </List.Item>
                       )}
                     />

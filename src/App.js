@@ -274,20 +274,7 @@ function App() {
   return (
     <Router>
       <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to='/Login'>Login</Link>
-            </li>
-            <li>
-              <Link to='/Main'>Main</Link>
-            </li>
-            <li>
-              <Link to='/User'>User</Link>
-            </li>
 
-          </ul>
-        </nav>
 
         <Route path='/Login' exact component={Login} />
         <Route path='/Main' component={Main} />

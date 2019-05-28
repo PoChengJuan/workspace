@@ -8,7 +8,7 @@ import {
 
 import { DatePicker } from 'antd';
 import moment from 'moment';
-const dateFormat = 'YYYY/MM/DD';
+const dateFormat = 'YYYY-MM-DD';
 const { RangePicker } = DatePicker;
 
   const data = [
@@ -52,7 +52,7 @@ class AreaChartItem extends React.Component{
                 <Col span={24}>
                     <div>
                         <RangePicker
-                        defaultValue={[moment('2018/01/01', dateFormat), moment('2018/01/01', dateFormat)]}
+                        defaultValue={[moment('2018-01-01', dateFormat), moment('2018-01-01', dateFormat)]}
                         format={dateFormat}
                         />
                         <AreaChart className = "AreaChart"
