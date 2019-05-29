@@ -276,7 +276,7 @@ function App() {
       <div>
 
 
-        <Route path='/Login' exact component={Login} />
+        <Route path='/' exact component={Login} />
         <Route path='/Main' component={Main} />
         <Route path='/User' component={User} />
       </div>

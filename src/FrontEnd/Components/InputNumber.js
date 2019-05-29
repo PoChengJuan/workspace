@@ -38,7 +38,7 @@ class NumericInput extends React.Component {
   };
 
   render() {
-    const { value } = this.props;
+    const { StockValue } = this.props;
 
     return (
 
