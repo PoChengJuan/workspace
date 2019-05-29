@@ -40,7 +40,7 @@ class UserPage extends React.Component{
       ShopName:'',
       StockItem:'',
       StockValue:'',
-      Income:''}
+      IncomeValue:''}
       
   }
   UploadFunction(event){
@@ -51,6 +51,9 @@ class UserPage extends React.Component{
   }
   StockValueStore = StockValue =>{
     this.setState({StockValue});
+  }
+  IncomStore = IncomStore =>{
+    this.setState({IncomStore});
   }
   render(){
     console.log("show")
@@ -73,8 +76,11 @@ class UserPage extends React.Component{
                       bordered
                       dataSource={this.state.StockItem}
                       renderItem={item => (
-                        <List.Item>
-                          {item} <InputNumber className="Number" value={this.state.StockValue} onChange={this.StockValueStore} defaultValue='0'/><InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />
+                        <List.Item actions={
+                          [<InputNumber className="Number" value={this.state.StockValue} onChange={this.StockValueStore} defaultValue='0'/>,
+                          <InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />]
+                          }>
+                          {item} 
                         </List.Item>
                       )}
                     />
@@ -82,8 +88,8 @@ class UserPage extends React.Component{
                       bordered
                       dataSource={income}
                       renderItem={item=>(
-                        <List.Item>
-                          {item} <NumericInput className="Income" defaultValue='0'/>
+                        <List.Item actions={[<NumericInput style={{ width: 130 }} value={this.state.value} onChange={this.IncomStore} />]}>
+                          {item} 
                         </List.Item>
                       )}
                     />

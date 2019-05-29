@@ -46,7 +46,7 @@ class NumericInput extends React.Component {
           {...this.props}
           onChange={this.onChange}
           onBlur={this.onBlur}
-          placeholder="Input"
+          placeholder=""
           maxLength={25}
         />
       
@@ -66,9 +66,9 @@ class NumericInputDemo extends React.Component {
 
   render() {
     return (
-      <NumericInput style={{ width: 80 }} value={this.state.value} onChange={this.onChange} />
+      <NumericInput style={{ width: 115 }} value={this.state.value} onChange={this.onChange} />
     );
   }
 }
 
-export default NumericInputDemo
+export default NumericInput
