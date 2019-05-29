@@ -7,17 +7,24 @@ import '../../App.css'
 import './Login.css'
 import axios from 'axios'
 import md5 from 'md5'
+import { observer } from 'mobx-react';
+import User from './User'
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter
+} from "react-router-dom";
+
 const { Title } = Typography;
 const {
   Header, Content,
 } = Layout;
-let UserInfo = (props) => {
-    const {
-      Name, Password, Permission, ShopName
-    } = props;
-  };
+
+
 class Login extends React.Component{
-  
+  state = { redirectToReferrer: false };
   constructor(props){
     super(props);
     this.state = {
@@ -36,28 +43,51 @@ class Login extends React.Component{
     this.setState({pwInput: e.target.value});
   }
   LoginFunction(event){
-    //console.log("USER:"+this.state.userInput+"PS:"+this.state.pwInput);
-    //console.log(md5(this.state.psw));
-    axios.get('http://localhost:8080/User/getMember?name='+this.state.userInput)
-    .then(function (response) {
-      console.log(response.data[0]);
+    //axios.get('http://localhost:8080/User/getMember?name='+this.state.userInput)
+    axios.get('http://localhost:8080/User/getMember',
+    {params: {
+      name : this.state.userInput
+      ,password : md5(this.state.pwInput)}}
+      )
+    .then( (response) =>{
       for(var index in response.data[0]) {
-        if(index=="name")
+        if(index==="name")
         {
-          //this.setState({Name:response.data[0][index]})
-          UserInfo.Name = response.data[0][index]
-          console.log(response.data[0][index])
+          this.setState({Name:response.data[0][index]})
+          //console.log(this.state.Name)
         }
-        console.log(index);
-    } 
-      //this.setState({Name:event});
+        if(index==="password"){
+          this.setState({Password:response.data[0][index]})          
+          //console.log(response.data[0][index]);
+        }
+        if(index==="permission"){
+          this.setState({Permission:response.data[0][index]})
+          //console.log(response.data[0][index]);
+        }
+        if(index==="shopname"){
+          this.setState({ShopName:response.data[0][index]})
+          //console.log(response.data[0][index]);
+        }
+      } 
+      if(md5(this.state.pwInput) === this.state.Password){
+        //console.log("OKOKOK")
+        this.setState({redirectToReferrer: true})
+      }
     })
     .catch(function (error) {
       console.log(error);
     });
-    console.log(UserInfo.Name)
+    
   }
   render(){
+    //let { from } = this.props.location.state || { from: { pathname: "/" } };
+    let { redirectToReferrer } = this.state;
+    if(redirectToReferrer === true){
+      console.log("OK")
+      return <Redirect to={'User'} />
+    }else if(redirectToReferrer === false){
+      console.log("NG")
+    }
     return(
       <div className="App">
         <Row>
