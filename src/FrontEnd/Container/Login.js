@@ -3,12 +3,12 @@ import Button from 'antd/lib/button';
 import { Input } from 'antd';
 import { Typography, Layout, Row, Col } from 'antd';
 import CSILogo from '../png/Logo.png';
+import { observer, inject } from 'mobx-react'
 import '../../App.css'
 import './Login.css'
 import axios from 'axios'
 import md5 from 'md5'
-import { observer } from 'mobx-react';
-import User from './User'
+import '../Stores/UserInfoStore'
 import {
   BrowserRouter as Router,
   Route,
@@ -103,7 +103,7 @@ class Login extends React.Component{
                   <img src={CSILogo} alt='CSILogo' />
                   <div className="Content">
                     <Title level={3}>User:<Input className="UserInput" autoFocus="true" defaultValue = {this.state.userInput} onChange={this.UserHandle.bind(this)} /></Title>
-                    <Title level={3}>PW:<Input.Password className="UserInput" defaultValue = {this.state.pwInput} onChange={this.PSHandle.bind(this)} placeholder="input password" /></Title>              
+                    <Title level={3}>PW:<Input.Password className="UserInput" defaultValue = {this.state.pwInput} onChange={this.PSHandle.bind(this)} onPressEnter={this.LoginFunction.bind(this)} placeholder="input password" /></Title>              
                     <Button type="primary" onClick={this.LoginFunction.bind(this)}>Login</Button>
                   </div>
                 </div>
@@ -116,6 +116,10 @@ class Login extends React.Component{
   }
 }
 
+
+
+
+
 function LoginPage() {
   
   return (
@@ -123,3 +127,4 @@ function LoginPage() {
   );
 }
 export default LoginPage;
+//export default inject('UserInfoStore')(observer(LoginPage));

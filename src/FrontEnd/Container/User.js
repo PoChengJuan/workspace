@@ -4,6 +4,7 @@ import { Row, Col, Layout, Button } from 'antd';
 import { List, Icon, Popover, Avatar, InputNumber } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
+
 const { Header, Content } = Layout;
 const content = (
   <div>
@@ -21,7 +22,18 @@ const data = [
   'Item 4',
   'Item 5',
 ];
-
+const defaultData = [
+  {
+    title: 'Ant Design Title 1',
+    key: 1,
+    value:''
+  },
+  {
+    title: 'Ant Design Title 2',
+    key: 2,
+    value:''
+  }
+];
 var dataList = [
 
 ];
@@ -40,22 +52,40 @@ class UserPage extends React.Component{
       ShopName:'',
       StockItem:'',
       StockValue:'',
-      IncomeValue:''}
-      
+      IncomeValue:'',
+      data:''
+    }      
   }
   UploadFunction(event){
-    this.setState({StockItem:dataList})
+    this.setState({StockItem:""})
   }
   onChange(event){
 
   }
-  StockValueStore = StockValue =>{
-    this.setState({StockValue});
+  StockValueStore  = (item ,Num) => {
+    const { data} = this.state;
+    console.log('===', Num);
+      data.forEach(data => {
+      if (data.key === item.key) {
+        data.stock = Num;
+      }
+    });
+    this.setState({ data });
+  }
+  OrderValueStore = (item, Num)=>{
+    const {data} = this.state;
+    console.log('order:',Num);
+    data.forEach(data=>{
+      if(data.key === item.key){
+        data.order = Num
+      }
+    })
+    this.setState({ data });
   }
   IncomStore = IncomStore =>{
-    this.setState({IncomStore});
   }
   render(){
+    const { data } = this.state;
     console.log("show")
     return(
       <div className="App">
@@ -72,15 +102,15 @@ class UserPage extends React.Component{
               <Content>
                 <div className="Content">
                   <div className="ListName">
-                    <List
+                    <List 
                       bordered
-                      dataSource={this.state.StockItem}
+                      dataSource={data}
                       renderItem={item => (
-                        <List.Item actions={
-                          [<InputNumber className="Number" value={this.state.StockValue} onChange={this.StockValueStore} defaultValue='0'/>,
-                          <InputNumber className="Order" placeholder="叫貨" decimalSeparator="." defaultValue="0" />]
+                        <List.Item key={item.key} actions={
+                          [<InputNumber key={item.key} className="Number" value={item.stock} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
+                          <InputNumber key={item.key} className="Order" value={item.order} placeholder="叫貨" onChange={(value)=>this.OrderValueStore(item,value)} decimalSeparator="." defaultValue="0" />]
                           }>
-                          {item} 
+                          {item.title}
                         </List.Item>
                       )}
                     />
@@ -119,7 +149,8 @@ class UserPage extends React.Component{
     .catch(function (error) {
       console.log(error);
     });
-    this.setState({StockItem:dataList})
+    //this.setState({StockItem:dataList})
+    this.setState({data:dataList})
   }
   componentDidMount(){
     console.log('componentdDidMount');
