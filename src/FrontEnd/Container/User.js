@@ -1,11 +1,18 @@
 import React from 'react';
 import './User.css'
 import { Row, Col, Layout, Button } from 'antd';
-import { List, Icon, Popover, Avatar, InputNumber } from 'antd';
+import { List, Icon, Popover, Avatar, InputNumber,notification } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
 
 const { Header, Content } = Layout;
+
+const openNotificationWithIcon = type => {
+  notification[type]({
+    message: '上傳成功',
+  });
+};
+
 const User = (
   <div>
     <p>姓名：</p>
@@ -39,6 +46,7 @@ class UserPage extends React.Component{
   UploadFunction(event){
   }
   LogoutFunction(){
+    openNotificationWithIcon('success')
     console.log('logout')
   }
   StockValueStore  = (item ,Num) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import { Input } from 'antd';
-import { Typography, Layout, Row, Col } from 'antd';
+import { Typography, Layout, Row, Col,notification } from 'antd';
 import CSILogo from '../png/Logo.png';
 import { observer, inject } from 'mobx-react'
 import '../../App.css'
@@ -62,15 +62,12 @@ class Login extends React.Component{
         }
         if(index==="permission"){
           this.setState({Permission:response.data[0][index]})
-          //console.log(response.data[0][index]);
         }
         if(index==="shopname"){
           this.setState({ShopName:response.data[0][index]})
-          //console.log(response.data[0][index]);
         }
       } 
       if(md5(this.state.pwInput) === this.state.Password){
-        //console.log("OKOKOK")
         this.setState({redirectToReferrer: true})
       }
       this.setState({isAuth:true});
