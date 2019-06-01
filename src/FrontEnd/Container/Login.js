@@ -8,7 +8,6 @@ import '../../App.css'
 import './Login.css'
 import axios from 'axios'
 import md5 from 'md5'
-import '../Stores/UserInfoStore'
 import {
   BrowserRouter as Router,
   Route,
@@ -22,12 +21,15 @@ const {
   Header, Content,
 } = Layout;
 
+//export default inject('UserInfoStore')(observer(LoginPage));
 
 class Login extends React.Component{
+  UserInfoStore = this.props.UserInfoStore
   state = { redirectToReferrer: false };
   constructor(props){
     super(props);
     this.state = {
+      isAuth:false,
       userInput: '',
       pwInput: '',
       Name:'',
@@ -54,11 +56,9 @@ class Login extends React.Component{
         if(index==="name")
         {
           this.setState({Name:response.data[0][index]})
-          //console.log(this.state.Name)
         }
         if(index==="password"){
           this.setState({Password:response.data[0][index]})          
-          //console.log(response.data[0][index]);
         }
         if(index==="permission"){
           this.setState({Permission:response.data[0][index]})
@@ -73,6 +73,7 @@ class Login extends React.Component{
         //console.log("OKOKOK")
         this.setState({redirectToReferrer: true})
       }
+      this.setState({isAuth:true});
     })
     .catch(function (error) {
       console.log(error);
