@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from 'antd/lib/button';
 import { Input } from 'antd';
-import { Typography, Layout, Row, Col,notification } from 'antd';
+import { Typography, Layout, Row, Col } from 'antd';
 import CSILogo from '../png/Logo.png';
 import { observer, inject } from 'mobx-react'
 import '../../App.css'
@@ -25,17 +25,17 @@ const {
 
 class Login extends React.Component{
   UserInfoStore = this.props.UserInfoStore
-  state = { redirectToReferrer: false };
   constructor(props){
     super(props);
     this.state = {
-      isAuth:false,
+      isAuth:'',
       userInput: '',
       pwInput: '',
       Name:'',
       Password:'',
       Permission:'',
-      ShopName:''}
+      ShopName:'',
+      Branch:''}
       
   }
   UserHandle(e){
@@ -53,24 +53,32 @@ class Login extends React.Component{
       )
     .then( (response) =>{
       for(var index in response.data[0]) {
-        if(index==="name")
-        {
-          this.setState({Name:response.data[0][index]})
+        if(index==='name'){
+          this.setState({Name:response.data[0][index]});
+          window.sessionStorage.setItem('name',response.data[0][index]);
         }
-        if(index==="password"){
-          this.setState({Password:response.data[0][index]})          
+        if(index==='password'){
+          this.setState({Password:response.data[0][index]});        
         }
-        if(index==="permission"){
-          this.setState({Permission:response.data[0][index]})
+        if(index==='permission'){
+          this.setState({Permission:response.data[0][index]});
+          window.sessionStorage.setItem('permission',response.data[0][index]);
         }
-        if(index==="shopname"){
-          this.setState({ShopName:response.data[0][index]})
+        if(index==='shopname'){
+          this.setState({ShopName:response.data[0][index]});
+          window.sessionStorage.setItem('shopname',response.data[0][index]);
+
+        }
+        if(index==='branch'){
+          this.setState({Branch:response.data[0][index]});
+          window.sessionStorage.setItem('branch',response.data[0][index]);
         }
       } 
       if(md5(this.state.pwInput) === this.state.Password){
-        this.setState({redirectToReferrer: true})
+        this.setState({isAuth:'true'});
+        window.sessionStorage.setItem('isAuth','true');      
       }
-      this.setState({isAuth:true});
+      
     })
     .catch(function (error) {
       console.log(error);
@@ -79,12 +87,12 @@ class Login extends React.Component{
   }
   render(){
     //let { from } = this.props.location.state || { from: { pathname: "/" } };
-    let { redirectToReferrer } = this.state;
-    if(redirectToReferrer === true){
+    //let { redirectToReferrer } = this.state;
+    const { isAuth } = this.state;
+    console.log('bigbangetw')
+    if(isAuth === 'true'){
       console.log("OK")
       return <Redirect to={'User'} />
-    }else if(redirectToReferrer === false){
-      console.log("NG")
     }
     return(
       <div className="App">
@@ -92,7 +100,7 @@ class Login extends React.Component{
           <Layout >
             <Col span={24}>
               <Header className="Header">
-                <p>Phone:xxxxxxxxxx</p>
+                <a><p>Forget Password?</p></a>
               </Header>
             </Col>
             <Col span={24}>
@@ -100,7 +108,7 @@ class Login extends React.Component{
                 <div className="LoginContent">
                   <img src={CSILogo} alt='CSILogo' />
                   <div className="Content">
-                    <Title level={3}>User:<Input className="UserInput" autoFocus="true" defaultValue = {this.state.userInput} onChange={this.UserHandle.bind(this)} /></Title>
+                    <Title level={3}>User:<Input className="UserInput" autoFocus={true} defaultValue = {this.state.userInput} onChange={this.UserHandle.bind(this)} /></Title>
                     <Title level={3}>PW:<Input.Password className="UserInput" defaultValue = {this.state.pwInput} onChange={this.PSHandle.bind(this)} onPressEnter={this.LoginFunction.bind(this)} placeholder="input password" /></Title>              
                     <Button type="primary" onClick={this.LoginFunction.bind(this)}>Login</Button>
                   </div>
@@ -111,6 +119,9 @@ class Login extends React.Component{
         </Row>
       </div>
     )
+  }
+  componentWillMount() {
+    this.setState({isAuth:window.sessionStorage.getItem('isAuth')});   
   }
 }
 

@@ -4,7 +4,9 @@ import { Row, Col, Layout, Button } from 'antd';
 import { List, Icon, Popover, Avatar, InputNumber,notification } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
-
+import {BrowserRouter as Router,Redirect,} from "react-router-dom";
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
 const { Header, Content } = Layout;
 
 const openNotificationWithIcon = type => {
@@ -13,15 +15,13 @@ const openNotificationWithIcon = type => {
   });
 };
 
-const User = (
+/*const User = (
   <div>
     <p>姓名：</p>
     <p>位置：康樂總店</p>
     <p>人員：開發者</p>
-    
-    
   </div>
-);
+);*/
 var expense =[
   '支出'
 ];
@@ -32,22 +32,20 @@ class UserPage extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      Menu: '',
-      Stock: '',
-      Name:'',
-      Password:'',
-      Permission:'',
-      ShopName:'',
+      isAuth: '',
+      UploadDisable:true,
       data:'',
       Expense:'',
-      Income:''
+      Income:'',
+      Shop:'',
+      Name:'',
+      Branch:'',
+      Permission:''
     }      
   }
-  UploadFunction(event){
-  }
   LogoutFunction(){
-    openNotificationWithIcon('success')
-    console.log('logout')
+    this.setState({isAuth:'false'});
+    window.sessionStorage.setItem('isAuth','false');
   }
   StockValueStore  = (item ,Num) => {
     const {data} = this.state;
@@ -76,8 +74,11 @@ class UserPage extends React.Component{
     this.setState({Expense:expense})
   }
   render(){
-    const { data, Expense,Income } = this.state;
-    console.log("show")
+    const { data,isAuth, Expense,Income } = this.state;
+    if(isAuth === 'false'){
+      console.log('logout');
+      return <Redirect to={'/'} />
+    }    
     return(
       <div className="App">
         <Row>
@@ -86,8 +87,15 @@ class UserPage extends React.Component{
               <Header className="Header">
                 <Popover content={
                   <div>
-                    {User}
-                    <Button className='logout' onClick={this.LogoutFunction}>登出<Icon type="logout" /></Button>
+                    {
+                      //User
+                      <div>
+                        <p>姓名：{this.state.Name}</p>
+                        <p>位置：{this.state.Branch}</p>
+                        <p>權限：{this.state.Permission}</p>
+                      </div>
+                    }
+                    <Button className='logout' onClick={this.LogoutFunction.bind(this)}>登出<Icon type="logout" /></Button>
                   </div>
                 } trigger="click">
                   <Avatar className="Avatar" shape="circle" icon="user" size={60} />    
@@ -129,7 +137,7 @@ class UserPage extends React.Component{
                       )}
                     />
                   </div>
-                  <Button type="primary" className="Upload" disabled = {true} onClick={this.UploadFunction.bind(this)}>上傳</Button>
+                  <Button type="primary" className="Upload" disabled = {this.state.UploadDisable} onClick={this.UploadFunction.bind(this)}>上傳</Button>
                 </div>
               </Content>
             </Col>
@@ -138,21 +146,63 @@ class UserPage extends React.Component{
       </div>
     )
   }
-
-  componentWillMount() {
-    console.log('componentWillMount');
-    //axios.get('http://localhost:8080/ShopInfo/getMenu?shopname=彩虹咖啡&branch=康樂總店')
-    axios.get('http://localhost:8080/ShopData/getLastStock/?shop=彩虹咖啡&branch=康樂總店')
-    .then( (response) => {
-      for(var index in response.data){
-        response.data[index].order = 0;
-      }
-      this.setState({data:response.data})
-      //this.setState({Expense:''})
+  UploadFunction(event){
+    console.log(this.state.Shop)
+    axios.post('http://localhost:8080/ShopData/add', {
+      name: this.state.Shop,
+      branch : this.state.Branch,
+      date:moment().format('YYYY-MM-DD'),
+      stock:this.state.data,
+      expense:this.state.Expense,
+      income:this.state.Income
+    })
+    .then(function (response) {
+      console.log(response);
+      this.setState({UploadDisable:true})
+      openNotificationWithIcon('success')
     })
     .catch(function (error) {
       console.log(error);
-    });    
+    });
+  }
+  componentWillMount() {
+    console.log('componentWillMount');
+      axios.get('http://localhost:8080/ShopData/getLastStock',
+        {
+          params: {
+            shop : window.sessionStorage.getItem('shopname'),
+            branch : window.sessionStorage.getItem('branch')
+          }
+        }
+      )
+      .then( (response) =>{
+      for(var index in response.data){
+        response.data[index].order = 0;
+      }
+      this.setState({data:response.data,
+        isAuth:window.sessionStorage.getItem('isAuth'),
+        Shop:window.sessionStorage.getItem('shopname'),
+        Name:window.sessionStorage.getItem('name'),
+        Branch:window.sessionStorage.getItem('branch'),
+        Permission:window.sessionStorage.getItem('permission')
+      });
+      if(window.sessionStorage.getItem('permission') === '9'){
+        this.setState({Permission:'開發者'});
+      }else if(window.sessionStorage.getItem('permission') === '7'){
+        this.setState({Permission:'老闆'});
+      }else if(window.sessionStorage.getItem('permission') === '5'){
+        this.setState({Permission:'店長'});
+      }else{
+        this.setState({Permission:'人員'});
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    }); 
+    //Upload Function only enable in 4pm
+    if(moment().format('hh a')==='04 pm'){
+      this.setState({UploadDisable:false})
+    }  
   }
   componentDidMount(){
     console.log('componentdDidMount');
