@@ -9,13 +9,16 @@ import AreaChartItem from '../Components/AreaChart.js';
 import PieChartItem from '../Components/PieChart.js'
 import ListItem from '../Components/List.js';
 import BarChartItem from '../Components/BarChart.js'
+import axios from 'axios'
+import baseURL from '../Components/AxiosAPI'
+
 const {
   Header, Footer, Sider, Content,
 } = Layout;
 
 const routes = [
   {
-    path: "/",
+    path: "/Stock",
     exact: true,
     main: () => <ListItem />
   },
@@ -49,7 +52,9 @@ const Shop = (
       
   </Menu>
 );
-
+const branch =(
+  <Menu></Menu>
+);
 const content = (
   <div>
     <p>姓名：</p>
@@ -66,8 +71,7 @@ class MainPage extends React.Component{
       Shop: '康樂總店'}
   }
   ShopChangeHandle(e){
-    console.log(this.props);
-    this.setState({Shop:"13"})
+
   }
   render(){
     return(
@@ -91,7 +95,7 @@ class MainPage extends React.Component{
                   <ul>
                     <ul style={{ listStyleType: "none", padding: 0 }}>
                       <li>
-                        <Link to="/">庫存</Link>
+                        <Link to="/Stock">庫存</Link>
                       </li>
                       <li>
                         <Link to="/bubblegum">支出</Link>
@@ -129,6 +133,27 @@ class MainPage extends React.Component{
         
       </div>
     )
+  }
+  componentWillMount() {
+    console.log('componentWillMount')
+    axios.get(baseURL+'/ShopInfo/getBranch',
+      {
+        params: {
+        shopname : window.sessionStorage.getItem('shopname')
+      }
+      })
+    .then( (response) =>{
+      console.log(response)
+      //for(var index in response.data) {
+       // this.setState({Shop:response.data[index]})
+       // console.log(response.data[index])
+      //}
+      this.setState({Shop:response.data})
+      console.log(branch)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
 }
 

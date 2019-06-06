@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Tooltip } from 'antd';
+import { Input } from 'antd';
 import './InputNumber.css'
 function formatNumber(value) {
   value += '';
@@ -28,7 +28,7 @@ class NumericInput extends React.Component {
 
   // '.' at the end or only '-' in the input box.
   onBlur = () => {
-    const { value, onBlur, onChange } = this.props;
+    const { onBlur } = this.props;
     /*if (value.charAt(value.length - 1) === '.' || value === '-') {
       onChange(value.slice(0, -1));
     }*/
@@ -38,7 +38,6 @@ class NumericInput extends React.Component {
   };
 
   render() {
-    const { StockValue } = this.props;
 
     return (
 
@@ -53,7 +52,7 @@ class NumericInput extends React.Component {
     );
   }
 }
-
+/*
 class NumericInputDemo extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +68,6 @@ class NumericInputDemo extends React.Component {
       <NumericInput style={{ width: 115 }} value={this.state.value} onChange={this.onChange} />
     );
   }
-}
+}*/
 
 export default NumericInput

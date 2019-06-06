@@ -6,7 +6,7 @@ import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
 import {BrowserRouter as Router,Redirect,} from "react-router-dom";
 import moment from 'moment';
-const dateFormat = 'YYYY-MM-DD';
+import baseURL from '../Components/AxiosAPI'
 const { Header, Content } = Layout;
 
 const openNotificationWithIcon = type => {
@@ -34,6 +34,7 @@ class UserPage extends React.Component{
     this.state = {
       isAuth: '',
       UploadDisable:true,
+      TodayUpLoad:false,
       data:'',
       Expense:'',
       Income:'',
@@ -74,7 +75,7 @@ class UserPage extends React.Component{
     this.setState({Expense:expense})
   }
   render(){
-    const { data,isAuth, Expense,Income } = this.state;
+    const { data,isAuth } = this.state;
     if(isAuth === 'false'){
       console.log('logout');
       return <Redirect to={'/'} />
@@ -148,7 +149,7 @@ class UserPage extends React.Component{
   }
   UploadFunction(event){
     console.log(this.state.Shop)
-    axios.post('http://localhost:8080/ShopData/add', {
+    axios.post(baseURL+'/ShopData/add', {
       name: this.state.Shop,
       branch : this.state.Branch,
       date:moment().format('YYYY-MM-DD'),
@@ -156,9 +157,12 @@ class UserPage extends React.Component{
       expense:this.state.Expense,
       income:this.state.Income
     })
-    .then(function (response) {
+    .then( (response) => {
       console.log(response);
-      this.setState({UploadDisable:true})
+      this.setState({UploadDisable:true,
+                     TodayUpLoad:true})
+      window.sessionStorage.setItem('date',moment().add('day',1).format('MM-DD'))    
+      console.log('success')
       openNotificationWithIcon('success')
     })
     .catch(function (error) {
@@ -167,7 +171,7 @@ class UserPage extends React.Component{
   }
   componentWillMount() {
     console.log('componentWillMount');
-      axios.get('http://localhost:8080/ShopData/getLastStock',
+      axios.get(baseURL+'/ShopData/getLastStock',
         {
           params: {
             shop : window.sessionStorage.getItem('shopname'),
@@ -199,10 +203,19 @@ class UserPage extends React.Component{
     .catch(function (error) {
       console.log(error);
     }); 
-    //Upload Function only enable in 4pm
-    if(moment().format('hh a')==='04 pm'){
-      this.setState({UploadDisable:false})
-    }  
+    //console.log(window.sessionStorage.getItem('date'))
+    //console.log(moment().format('MM-DD'))
+    //One day only upload one time
+    if( window.sessionStorage.getItem('date') === moment().format('MM-DD')){
+      //Upload Function only enable in 4pm ~ 5pm
+      console.log(moment().format('hh a'))
+      if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm')){        
+        if(this.state.TodayUpLoad === false){
+          this.setState({UploadDisable:false});
+        }
+      }  
+    }
+    
   }
   componentDidMount(){
     console.log('componentdDidMount');

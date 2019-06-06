@@ -2,3 +2,6 @@
     margin-bottom: 0%;
     text-align: right;
   }
+  .is-ios * {
+    cursor: pointer;
+}

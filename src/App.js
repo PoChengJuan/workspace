@@ -264,28 +264,21 @@ function App() {
 
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from './FrontEnd/Container/Login'
 import Main from './FrontEnd/Container/Main'
 import User from './FrontEnd/Container/User'
 import Test from './FrontEnd/Container/test'
-import UserInfoStore from './FrontEnd/Stores/UserInfoStore'
-import { Provider } from 'mobx-react';
 
-const store = {
-  //UserInfoStore
-  //test: new UserInfoStore()
-};
+
 function App() {
   return (
     <Router>
-      <Provider {...store}>
       <div>
         <Route path='/' exact component={Login} />
         <Route path='/Main' component={Main} />
         <Route path='/User' component={User} />
       </div>
-      </Provider>
     </Router>
   );
 }

@@ -3,28 +3,24 @@ import Button from 'antd/lib/button';
 import { Input } from 'antd';
 import { Typography, Layout, Row, Col } from 'antd';
 import CSILogo from '../png/Logo.png';
-import { observer, inject } from 'mobx-react'
 import '../../App.css'
 import './Login.css'
 import axios from 'axios'
 import md5 from 'md5'
 import {
   BrowserRouter as Router,
-  Route,
-  Link,
   Redirect,
-  withRouter
 } from "react-router-dom";
+import moment from 'moment';
+import baseURL from '../Components/AxiosAPI'
 
 const { Title } = Typography;
 const {
   Header, Content,
 } = Layout;
 
-//export default inject('UserInfoStore')(observer(LoginPage));
 
 class Login extends React.Component{
-  UserInfoStore = this.props.UserInfoStore
   constructor(props){
     super(props);
     this.state = {
@@ -46,7 +42,7 @@ class Login extends React.Component{
   }
   LoginFunction(event){
     //axios.get('http://localhost:8080/User/getMember?name='+this.state.userInput)
-    axios.get('http://localhost:8080/User/getMember',
+    axios.get(baseURL+'/User/getMember',
     {params: {
       name : this.state.userInput
       ,password : md5(this.state.pwInput)}}
@@ -76,7 +72,8 @@ class Login extends React.Component{
       } 
       if(md5(this.state.pwInput) === this.state.Password){
         this.setState({isAuth:'true'});
-        window.sessionStorage.setItem('isAuth','true');      
+        window.sessionStorage.setItem('isAuth','true');  
+        window.sessionStorage.setItem('date',moment().format('MM-DD'))    
       }
       
     })
@@ -92,7 +89,11 @@ class Login extends React.Component{
     console.log('bigbangetw')
     if(isAuth === 'true'){
       console.log("OK")
-      return <Redirect to={'User'} />
+      if(this.state.Permission >= 7){
+        return <Redirect to={'User'} />
+      }else{
+        return <Redirect to={'User'} />
+      }
     }
     return(
       <div className="App">
@@ -107,10 +108,12 @@ class Login extends React.Component{
               <Content className="Content">
                 <div className="LoginContent">
                   <img src={CSILogo} alt='CSILogo' />
-                  <div className="Content">
+                  <div>
                     <Title level={3}>User:<Input className="UserInput" autoFocus={true} defaultValue = {this.state.userInput} onChange={this.UserHandle.bind(this)} /></Title>
                     <Title level={3}>PW:<Input.Password className="UserInput" defaultValue = {this.state.pwInput} onChange={this.PSHandle.bind(this)} onPressEnter={this.LoginFunction.bind(this)} placeholder="input password" /></Title>              
-                    <Button type="primary" onClick={this.LoginFunction.bind(this)}>Login</Button>
+                  </div>
+                  <div className='LoginButton'>
+                    <Button  type="primary" onClick={this.LoginFunction.bind(this)}>Login</Button>
                   </div>
                 </div>
               </Content>
@@ -136,4 +139,3 @@ function LoginPage() {
   );
 }
 export default LoginPage;
-//export default inject('UserInfoStore')(observer(LoginPage));
