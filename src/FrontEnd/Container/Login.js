@@ -49,9 +49,12 @@ class Login extends React.Component{
       )
     .then( (response) =>{
       for(var index in response.data[0]) {
+        if(index==='auto_increment'){
+          window.sessionStorage.setItem('auto_increment',response.data[0][index]);
+        }
         if(index==='name'){
           this.setState({Name:response.data[0][index]});
-          window.sessionStorage.setItem('name',response.data[0][index]);
+          window.localStorage.setItem('name',response.data[0][index]);
         }
         if(index==='password'){
           this.setState({Password:response.data[0][index]});        
@@ -62,18 +65,22 @@ class Login extends React.Component{
         }
         if(index==='shopname'){
           this.setState({ShopName:response.data[0][index]});
-          window.sessionStorage.setItem('shopname',response.data[0][index]);
+          window.localStorage.setItem('shopname',response.data[0][index]);
 
         }
         if(index==='branch'){
           this.setState({Branch:response.data[0][index]});
-          window.sessionStorage.setItem('branch',response.data[0][index]);
+          window.localStorage.setItem('branch',response.data[0][index]);
         }
+        if(index==='lastupload'){
+          //this.setState({Branch:response.data[0][index]});
+          window.sessionStorage.setItem('lastupload',response.data[0][index]);
+        }
+
       } 
       if(md5(this.state.pwInput) === this.state.Password){
-        this.setState({isAuth:'true'});
         window.sessionStorage.setItem('isAuth','true');  
-        window.sessionStorage.setItem('date',moment().format('MM-DD'))    
+        this.setState({isAuth:'true'});
       }
       
     })
@@ -89,9 +96,11 @@ class Login extends React.Component{
     console.log('bigbangetw')
     if(isAuth === 'true'){
       console.log("OK")
-      if(this.state.Permission >= 7){
-        return <Redirect to={'User'} />
+      if(window.sessionStorage.getItem('permission') >= 7){
+        console.log('main')
+        return <Redirect to={'Main'} />
       }else{
+        console.log('stock')
         return <Redirect to={'User'} />
       }
     }

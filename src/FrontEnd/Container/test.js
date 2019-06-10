@@ -1,4 +1,4 @@
-/*import React from 'react';
+import React from 'react';
 import './User.css'
 import { Row, Col, Layout, Button, Input } from 'antd';
 import { List, Icon, Popover, Avatar, InputNumber } from 'antd';
@@ -67,4 +67,4 @@ const defaultData = [
         </React.Fragment>
       );
     }
-  }*/
+  }

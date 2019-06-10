@@ -22,9 +22,9 @@ const openNotificationWithIcon = type => {
     <p>人員：開發者</p>
   </div>
 );*/
-var expense =[
-  '支出'
-];
+//var expense =[
+ // '支出'
+//];
 var income = [
   '營業額'
 ];
@@ -34,14 +34,16 @@ class UserPage extends React.Component{
     this.state = {
       isAuth: '',
       UploadDisable:true,
-      TodayUpLoad:false,
       data:'',
-      Expense:'',
+      expense:'',
       Income:'',
       Shop:'',
       Name:'',
       Branch:'',
-      Permission:''
+      Permission:'',
+      Position:'',
+      Display:false,
+      MainPage:false
     }      
   }
   LogoutFunction(){
@@ -68,17 +70,30 @@ class UserPage extends React.Component{
     })
     this.setState({ data });
   }
+  ExpenseValueStore = (item, Num) => {
+    const {expense} = this.state;
+    console.log('expense:',Num);
+    expense.forEach(expense=>{
+      if(expense.key === item.key){
+        expense.cost = Num
+      }
+    })
+    this.setState({expense});
+
+  }
   IncomStore = (income) =>{
     this.setState({Income:income})
   }
-  ExpenseStore = (expense) => {
-    this.setState({Expense:expense})
+  MainFnction(e){
+    this.setState({MainPage:true})
   }
   render(){
-    const { data,isAuth } = this.state;
+    const { data,expense,isAuth,MainPage } = this.state;
     if(isAuth === 'false'){
       console.log('logout');
       return <Redirect to={'/'} />
+    }else if(MainPage === true){
+      return <Redirect to={'Main'} />
     }    
     return(
       <div className="App">
@@ -86,21 +101,26 @@ class UserPage extends React.Component{
           <Layout>
             <Col span={24}>
               <Header className="Header">
-                <Popover content={
-                  <div>
-                    {
-                      //User
-                      <div>
-                        <p>姓名：{this.state.Name}</p>
-                        <p>位置：{this.state.Branch}</p>
-                        <p>權限：{this.state.Permission}</p>
-                      </div>
-                    }
-                    <Button className='logout' onClick={this.LogoutFunction.bind(this)}>登出<Icon type="logout" /></Button>
-                  </div>
-                } trigger="click">
-                  <Avatar className="Avatar" shape="circle" icon="user" size={60} />    
-                </Popover>
+                <div>
+                  <Popover content={
+                    <div>
+                      {
+                        //User
+                        <div>
+                          <p>姓名：{this.state.Name}</p>
+                          <p>位置：{this.state.Branch}</p>
+                          <p>權限：{this.state.Position}</p>
+                        </div>
+                      }
+                      <Button className='logout' onClick={this.LogoutFunction.bind(this)}>登出<Icon type="logout" /></Button>
+                    </div>
+                  } trigger="click">
+                    <Avatar className="Avatar" shape="circle" icon="user" size={60} />    
+                  </Popover>
+                  {this.state.Display &&
+                    <Icon type="line-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
+                  }
+                </div>
               </Header>
             </Col>
             <Col span={24}>
@@ -113,7 +133,7 @@ class UserPage extends React.Component{
                       renderItem={item => (
                         <List.Item key={item.key} actions={
                           [<InputNumber key={item.key} className="Number" value={item.stock} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
-                          <InputNumber key={item.key} className="Order" value={item.order} placeholder="叫貨" onChange={(value)=>this.OrderValueStore(item,value)} decimalSeparator="." defaultValue="0" />]
+                          <InputNumber key={item.key} className="Order" value={item.order} placeholder="叫貨" onChange={(value)=>this.OrderValueStore(item,value)} decimalSeparator="." />]
                           }>
                           {item.title}
                         </List.Item>
@@ -123,8 +143,15 @@ class UserPage extends React.Component{
                       bordered
                       dataSource={expense}
                       renderItem={item=>(
-                        <List.Item actions={[<NumericInput style={{ width: 130 }} addonBefore={'NTD:'} value={this.state.Expense} onChange={(value)=>this.ExpenseStore(value)}  />]}>
-                          {'支出'} 
+                        //<List.Item actions={[<NumericInput style={{ width: 130 }} addonBefore={'NTD:'} value={this.state.Expense} onChange={(value)=>this.ExpenseStore(value)}  />]}>
+                         // {'支出'} 
+                        //</List.Item>
+                        <List.Item key={item.key} actions={
+                          [<NumericInput style={{ width: 130 }} key={item.key} addonBefore={'NTD:'} value={item.cost} onChange={(value) => this.ExpenseValueStore(item,value)} defaultValue='0' />
+                          //<InputNumber key={item.key} className="Number" value={item.cost} onChange={(value) => this.ExpenseValueStore(item,value)} defaultValue='0'/>
+                        ]
+                          }>
+                          {item.title}
                         </List.Item>
                       )}
                     />
@@ -150,32 +177,46 @@ class UserPage extends React.Component{
   UploadFunction(event){
     console.log(this.state.Shop)
     axios.post(baseURL+'/ShopData/add', {
-      name: this.state.Shop,
+      shopname: this.state.Shop,
       branch : this.state.Branch,
+      name:this.state.Name,
       date:moment().format('YYYY-MM-DD'),
+      time:moment().format('hh:mm'),
       stock:this.state.data,
-      expense:this.state.Expense,
+      expense:this.state.expense,
       income:this.state.Income
     })
     .then( (response) => {
       console.log(response);
-      this.setState({UploadDisable:true,
-                     TodayUpLoad:true})
-      window.sessionStorage.setItem('date',moment().add('day',1).format('MM-DD'))    
+      this.setState({UploadDisable:true})
       console.log('success')
+      window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
       openNotificationWithIcon('success')
+      
+      //set last upload date
+      axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
+        date:moment().format('YYYY-MM-DD')
+      })
+      .then( (response) => {
+        console.log(response);
+      })
+      .catch( (error) => {
+        console.log(error);
+      });
     })
     .catch(function (error) {
       console.log(error);
     });
+    
   }
+
   componentWillMount() {
     console.log('componentWillMount');
       axios.get(baseURL+'/ShopData/getLastStock',
         {
           params: {
-            shop : window.sessionStorage.getItem('shopname'),
-            branch : window.sessionStorage.getItem('branch')
+            shop : window.localStorage.getItem('shopname'),
+            branch : window.localStorage.getItem('branch')
           }
         }
       )
@@ -184,21 +225,40 @@ class UserPage extends React.Component{
         response.data[index].order = 0;
       }
       this.setState({data:response.data,
+        Shop:window.localStorage.getItem('shopname'),
+        Name:window.localStorage.getItem('name'),
+        Branch:window.localStorage.getItem('branch'),
         isAuth:window.sessionStorage.getItem('isAuth'),
-        Shop:window.sessionStorage.getItem('shopname'),
-        Name:window.sessionStorage.getItem('name'),
-        Branch:window.sessionStorage.getItem('branch'),
         Permission:window.sessionStorage.getItem('permission')
       });
       if(window.sessionStorage.getItem('permission') === '9'){
-        this.setState({Permission:'開發者'});
+        this.setState({Position:'開發者',
+        Display:true});
       }else if(window.sessionStorage.getItem('permission') === '7'){
-        this.setState({Permission:'老闆'});
+        this.setState({Position:'老闆',
+        Display:true});
       }else if(window.sessionStorage.getItem('permission') === '5'){
-        this.setState({Permission:'店長'});
+        this.setState({Position:'店長'});
       }else{
-        this.setState({Permission:'人員'});
+        this.setState({Position:'人員'});
       }
+    })
+    .catch(function (error) {
+      console.log(error);
+    }); 
+    
+    axios.get(baseURL+'/ShopData/getExpense',
+    {
+      params: {
+        shop: window.localStorage.getItem('shopname'),
+        branch: window.localStorage.getItem('branch')
+      }
+    })
+    .then( (response) => {
+      for(var index in response.data){
+        response.data[index].cost = 0;
+      }
+      this.setState({expense:response.data});
     })
     .catch(function (error) {
       console.log(error);
@@ -206,19 +266,24 @@ class UserPage extends React.Component{
     //console.log(window.sessionStorage.getItem('date'))
     //console.log(moment().format('MM-DD'))
     //One day only upload one time
-    if( window.sessionStorage.getItem('date') === moment().format('MM-DD')){
       //Upload Function only enable in 4pm ~ 5pm
-      console.log(moment().format('hh a'))
+      console.log(window.sessionStorage.getItem('isAuth'))
+
+    //console.log(window.sessionStorage.getItem('lastupload'))
+    //console.log(moment().format('YYYY-MM-DD'))
+    //if(window.sessionStorage.getItem('isupload') === 'false'){
+    if(window.sessionStorage.getItem('lastupload') !== moment().format('YYYY-MM-DD')){
       if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm')){        
-        if(this.state.TodayUpLoad === false){
-          this.setState({UploadDisable:false});
-        }
-      }  
+        this.setState({UploadDisable:false});
+      } 
     }
-    
+    //if(window.sessionStorage.getItem('uploadagain') === 'true'){
+    //  this.setState({UploadDisable:false});
+    //}
   }
   componentDidMount(){
     console.log('componentdDidMount');
+    console.log(moment().format('YYYY-MM-DD hh:mm'))
   }
   componentDidUpdate(){
     console.log('componentDidUpdate');
