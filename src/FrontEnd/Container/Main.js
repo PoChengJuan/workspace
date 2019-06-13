@@ -3,7 +3,6 @@ import { Menu, Dropdown, Icon, Popover,Button, Avatar, Layout } from 'antd';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import '../../App.css'
 import './Main.css'
-
 import CSILogo from '../png/Logo.png' 
 import AreaChartItem from '../Components/AreaChart.js';
 import PieChartItem from '../Components/PieChart.js'

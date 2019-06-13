@@ -44,7 +44,7 @@ const expense_columns = [
 ];
 const income_columns = [
   {
-    title: '營業額',
+    title: '',
     dataIndex: 'title',
     key: 'title',
     render: text => <a href="javascript:;">{text}</a>,
@@ -95,11 +95,11 @@ class ListItem extends React.Component{
       this.GetData(window.localStorage.getItem('shopname'),window.localStorage.getItem('branch'),dateStrings);
     }
     componentWillUpdate(){
-      console.log('componentWillUpdate');
+      //console.log('componentWillUpdate');
 
     }
     componentWillMount() {
-        console.log('componentWillMount');
+        //console.log('componentWillMount');
         var date = window.localStorage.getItem('InfoPageDate') 
         if(date === null){
           this.GetData(
