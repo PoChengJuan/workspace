@@ -1,75 +1,184 @@
 import React from 'react';
-import { List, Typography } from 'antd';
+import { DatePicker, Typography,Table } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
+import moment from 'moment';
 
 import './List.css'
-const data = [
-  'Racing car sprays burning fuel into crowd.',
-  'Japanese princess to wed commoner.',
-  'Australian walks 100km after outback crash.',
-  'Man charged over missing wedding girl.',
-  'Los Angeles battles huge wildfires.',
+
+const dateFormat = 'YYYY-MM-DD';
+const testDate = '2019-06-12'
+const stock_columns = [
+  {
+    title: '品項',
+    dataIndex: 'title',
+    key: 'title',
+    render: text => <a href="javascript:;">{text}</a>,
+  },
+  {
+    title: '庫存',
+    dataIndex: 'stock',
+    key: 'stock',
+    width:'2cm',
+  },
+  {
+    title: '叫貨量',
+    dataIndex: 'order',
+    key: 'order',
+    width:'2cm',
+  }
+];
+const expense_columns = [
+  {
+    title: '項目',
+    dataIndex: 'title',
+    key: 'title',
+    render: text => <a href="javascript:;">{text}</a>,
+  },
+  {
+    title: '金額',
+    dataIndex: 'cost',
+    key: 'cost',
+    width:'2cm',
+  }
+];
+const income_columns = [
+  {
+    title: '營業額',
+    dataIndex: 'title',
+    key: 'title',
+    render: text => <a href="javascript:;">{text}</a>,
+  },
+  {
+    title: '金額',
+    dataIndex: 'income',
+    key: 'income',
+    width:'2cm',
+  }
 ];
 
 class ListItem extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          data:''
+          data:'',
+          expense:'',
+          income:'',
+          lastUploadDate:testDate,
+          stockTableData:'',
+          date:''
         }      
       }
     render(){
+      const{data,expense,stockTableData}=this.state
         return(
             <div >
+                <DatePicker
+                  defaultValue={moment(this.state.date, dateFormat)} 
+                  format={dateFormat} 
+                  onChange={this.DatePickerFunction.bind(this)}
+                  />
+                <h2>{this.state.lastUploadDate}</h2>
                 <h3 style={{ marginBottom: 16 }}>庫存</h3>
-            <List
-            bordered
-            dataSource={this.state.data}
-            renderItem={item => (
-                <List.Item actions={[<p className='stockvalue' style={{fontSize:'0.8cm'}}>{item.stock}</p>]}>
-                {item.title}                
-                </List.Item>                
-            )}
-            />  
+                <Table columns={stock_columns} dataSource={data} size='small' pagination={false} scroll={{ y: 240 }} />
+                <h3 style={{ marginBottom: 16 }}>支出</h3>
+                <Table columns={expense_columns} dataSource={expense} size='small' pagination={false} scroll={{ y: 240 }} />
+                <h3 style={{ marginBottom: 16 }}>收入</h3>
+                <Table columns={income_columns} dataSource={this.state.income} size='small' pagination={false} scroll={{ y: 240 }} />
             </div>
               
         )
     }
+    DatePickerFunction(dates, dateStrings) {
+      console.log(dateStrings)
+      window.localStorage.setItem("InfoPageDate",dateStrings)
+      this.GetData(window.localStorage.getItem('shopname'),window.localStorage.getItem('branch'),dateStrings);
+    }
+    componentWillUpdate(){
+      console.log('componentWillUpdate');
+
+    }
     componentWillMount() {
         console.log('componentWillMount');
-          axios.get(baseURL+'/ShopData/getLastStock',
+        var date = window.localStorage.getItem('InfoPageDate') 
+        if(date === null){
+          this.GetData(
+            window.localStorage.getItem('shopname'),
+            window.localStorage.getItem('branch'),
+            moment().format('YYYY-MM-DD')
+            );
+            this.setState({date:moment().format('YYYY-MM-DD')})
+        }else{
+          this.GetData(
+            window.localStorage.getItem('shopname'),
+            window.localStorage.getItem('branch'),
+            window.localStorage.getItem('InfoPageDate')
+            );
+            this.setState({date:window.localStorage.getItem('InfoPageDate')})
+        }
+      }
+      GetData = (shop,branch,date) =>{
+        axios.get(baseURL+'/ShopData/getStock',
             {
               params: {
-                shop : window.localStorage.getItem('shopname'),
-                branch : window.localStorage.getItem('branch')
+                shop : shop,
+                branch : branch,
+                date: date
               }
             }
           )
           .then( (response) =>{
           this.setState({data:response.data});
         })
-        .catch(function (error) {
+        .catch( (error) => {
+          this.setState({data:''});
           console.log(error);
         }); 
         
         axios.get(baseURL+'/ShopData/getExpense',
         {
           params: {
-            shop: window.localStorage.getItem('shopname'),
-            branch: window.localStorage.getItem('branch')
+            shop: shop,
+            branch: branch,
+            date: date
           }
         })
         .then( (response) => {
-          for(var index in response.data){
-            response.data[index].cost = 0;
-          }
           this.setState({expense:response.data});
         })
-        .catch(function (error) {
+        .catch( (error) => {
+          this.setState({expense:''});
           console.log(error);
         }); 
         
+        axios.get(baseURL+'/ShopData/getIncome',
+        {
+          params: {
+            shop: shop,
+            branch: branch,
+            date: date
+          }
+        })
+        .then( (response) => {
+          this.setState({income:response.data});
+        })
+        .catch( (error) => {
+          this.setState({income:''});
+          console.log(error);
+        }); 
+        axios.get(baseURL+'/ShopData/getLastUploadDate',
+        {
+          params: {
+            shop: shop,
+            branch: branch
+          }
+        })
+        .then( (response) => {
+          this.setState({lastUploadDate:response.data});
+        })
+        .catch( (error) => {
+          console.log(error);
+        }); 
       }
 }
 

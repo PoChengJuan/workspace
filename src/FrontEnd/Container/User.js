@@ -175,7 +175,10 @@ class UserPage extends React.Component{
     )
   }
   UploadFunction(event){
-    console.log(this.state.Shop)
+    /*console.log(this.state.Shop)
+    this.state.data.map(item=>{
+      console.log(item.title)
+    })*/
     axios.post(baseURL+'/ShopData/add', {
       shopname: this.state.Shop,
       branch : this.state.Branch,
@@ -247,7 +250,7 @@ class UserPage extends React.Component{
       console.log(error);
     }); 
     
-    axios.get(baseURL+'/ShopData/getExpense',
+    axios.get(baseURL+'/ShopData/getLastExpense',
     {
       params: {
         shop: window.localStorage.getItem('shopname'),
@@ -276,7 +279,7 @@ class UserPage extends React.Component{
       if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm')){        
         this.setState({UploadDisable:false});
       } 
-    }
+    }this.setState({UploadDisable:false});
     //if(window.sessionStorage.getItem('uploadagain') === 'true'){
     //  this.setState({UploadDisable:false});
     //}

@@ -45,14 +45,24 @@ const renderCustomizedLabel = (props) => {
 };
 
 
-export default class BarChartItem extends React.Component {
-  static jsfiddleUrl = 'https://jsfiddle.net/alidingling/a5Leskck/';
+class BarChartItem extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log('constructor');
+    this.state = {
+      date: new Date(),
+      chartWidth:1500,
+      chartHeight:700
+    };
+    this.saveRef = ref => {this.refDom = ref};
+    this.updateDimensions = this.updateDimensions.bind(this)
 
+  }
   render() {
     return (
-      <div>
+      <div ref={this.saveRef}>
             <BarChart
-                width={this.props.width}
+                width={this.state.chartWidth}
                 height={this.props.height}
                 data={data}
                 margin={{
@@ -70,30 +80,23 @@ export default class BarChartItem extends React.Component {
                 </Bar>
                 <Bar dataKey="uv" fill="#82ca9d" minPointSize={10} />
             </BarChart>
-            <h1 onClick={this.handleClick}>{this.state.date.toLocaleTimeString()} Hi, {this.props.name}</h1>
             </div>
   );
   }
-  constructor(props) {
-    super(props);
-    console.log('constructor');
-    this.handleClick = this.handleClick.bind(this);
-    this.state = {date: new Date()};
-  }
-
-  handleClick() {
-    console.log(this)
-    this.setState({date: new Date()});
-  }
+  
 
   componentWillMount() {
     console.log('componentWillMount');
   }
   updateDimensions(){
+    const {clientWidth, clientHeight} = this.refDom;
     console.log("updateDimensions");
+    this.setState({
+      chartWidth:clientWidth
+    });
   }
   componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions.bind(this));
+    window.addEventListener("resize", this.updateDimensions);
   }
 
   componentWillReceiveProps() {
@@ -117,8 +120,9 @@ export default class BarChartItem extends React.Component {
 
   componentWillUnmount() {
     console.log('componentWillUnmount');
-    window.removeEventListener("resize", this.updateDimensions.bind(this));
-
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
 }
+
+export default BarChartItem

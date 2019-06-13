@@ -13,6 +13,8 @@ import InfoIcom from'../Components/InfoIcon.js'
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import MenuItem from 'antd/lib/menu/MenuItem';
+import StockList from '../Components/StockList.js'
+import Abc from '../Components/abcd.js'
 
 const {
   Header, Footer, Sider, Content,
@@ -20,9 +22,13 @@ const {
 
 const routes = [
   {
-    path: "/Stock",
+    path: "/Info",
     exact: true,
     main: () => <ListItem />
+  },
+  {
+    path: '/StockList',
+    main: () => <StockList />
   },
   {
     path: "/bubblegum",
@@ -30,7 +36,7 @@ const routes = [
   },
   {
     path: "/income",
-    main: () => <AreaChartItem />
+    main: () => <Abc />
   },
   {
     path: "/test",
@@ -51,7 +57,6 @@ const ShopList = (
     <Menu.Item key="2">
       麻豆店
     </Menu.Item>
-      
   </Menu>
 );
 const branch =(
@@ -71,8 +76,10 @@ class MainPage extends React.Component{
     super(props);
     this.state = {
       Shop: '康樂總店',
+      ShopList:ShopList,
       ShopListData:'',
       StockPage: false,
+      ScrapPage: false,
       isAuth:''}
   }
   ShopChangeHandle = (e, key) => {
@@ -82,17 +89,23 @@ class MainPage extends React.Component{
   StockFunction(e){
     this.setState({StockPage:true})
   }
+  ScrapFunction(e){
+    this.setState({ScrapPage:true})
+  }
   LogoutFunction(){
     window.sessionStorage.setItem('isAuth','false');
     this.setState({isAuth:'false'});
   }
   render(){
-    const { StockPage,isAuth,ShopListData } = this.state;
+    const { StockPage,ScrapPage,isAuth,ShopListData } = this.state;
     if(window.sessionStorage.getItem('isAuth') === 'false'){
       return <Redirect to={'/'} />
     }
     if(StockPage === true){
       return <Redirect to={'User'} />
+    }
+    if(ScrapPage === true){
+      return <Redirect to={'Scrap'} />
     }
     console.log('Main')
     return(
@@ -107,16 +120,7 @@ class MainPage extends React.Component{
               shape='square'
               logout={()=>this.LogoutFunction()}
             />
-            <Dropdown onVisibleChange={(value)=>this.ShopChangeHandle.bind(this,ShopList.key)}  className="Dropdown" 
-            overlay={
-              <Menu
-                dataSource={ShopListData}
-                renderItem={item => (
-                  <Menu.Item key={item[0][0]}>{item[0][1]}</Menu.Item>
-                )}
-                / >
-            } 
-            trigger={['hover']}>
+            <Dropdown onVisibleChange={(value)=>this.ShopChangeHandle.bind(this)}  className="Dropdown" overlay={this.state.ShopList} trigger={['hover']}>
               <a className="ant-dropdown-link" href="#">
                 {this.state.Shop} <Icon type="down" />
               </a>
@@ -129,22 +133,22 @@ class MainPage extends React.Component{
                   <ul>
                     <ul style={{ listStyleType: "none", padding: 0 }}>
                       <li>
-                        <a onClick={this.StockFunction.bind(this)}>盤點</a>
+                        <Link to="/Info">店家資訊</Link>
                       </li>
                       <li>
-                        <a>報廢</a>
+                        <Link to='/StockList'>庫存明細</Link>
                       </li>
                       <li>
-                        <Link to="/Stock">庫存</Link>
-                      </li>
-                      <li>
-                        <Link to="/bubblegum">支出</Link>
-                      </li>
-                      <li>
-                        <Link to="/income">營收</Link>
+                        <Link to="/income">收支圖</Link>
                       </li>
                       <li>
                         <Link to="/test">投報率</Link>
+                      </li>
+                      <li>
+                        <a onClick={this.StockFunction.bind(this)}>盤點</a>
+                      </li>
+                      <li>
+                        <a onClick={this.ScrapFunction.bind(this)}>報廢</a>
                       </li>
                     </ul>
                   </ul>
@@ -186,7 +190,8 @@ class MainPage extends React.Component{
       }
       })
     .then( (response) =>{  
-      this.setState({ShopListData:response.data})      
+      this.setState({ShopListData:response.data})   
+      console.log(response.data)   
       //for(var index in response.data) {
        // this.setState({Shop:response.data[index]})
        // console.log(response.data[index])
@@ -197,6 +202,7 @@ class MainPage extends React.Component{
       console.log(error);
     });
   }
+  
 }
 
 export default MainPage;
