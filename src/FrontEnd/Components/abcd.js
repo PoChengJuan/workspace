@@ -2,7 +2,10 @@ import React, { PureComponent } from 'react';
 import {
   Label, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceArea,
 } from 'recharts';
-
+import { DatePicker } from 'antd';
+import moment from 'moment';
+const dateFormat = 'YYYY-MM-DD';
+const { RangePicker } = DatePicker;
 const data = [
   { name: 1, cost: 4.11, impression: 100 },
   { name: 2, cost: 2.39, impression: 120 },
@@ -111,6 +114,11 @@ class Abc extends PureComponent {
 
     return (
       <div className="highlight-bar-charts" style={{ userSelect: 'none' }}>
+        <RangePicker
+          defaultValue={[moment(moment().add('day',-7).format('YYYY-MM-DD'), dateFormat), moment(moment().format('YYYY-MM-DD'), dateFormat)]}
+          format={dateFormat}
+          //onChange={this.DatePickerFunction.bind(this)}
+        />
         <button
           href="javascript: void(0);"
           className="btn update"

@@ -1,7 +1,7 @@
 import React from 'react';
 import './Scrap.css'
 import { Row, Col, Layout, Button } from 'antd';
-import { List, Icon, Popover, Avatar, InputNumber,notification } from 'antd';
+import { List, Icon, Popover, Avatar, InputNumber,notification,Switch } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
 import {BrowserRouter as Router,Redirect,} from "react-router-dom";
@@ -25,6 +25,7 @@ class UserPage extends React.Component{
     this.state = {
       isAuth: '',
       UploadDisable:true,
+      deleteSw:false,
       data:'',
       Shop:'',
       Name:'',
@@ -95,7 +96,12 @@ class UserPage extends React.Component{
                       )}
                     />
                   </div>
-                  <Button type="danger" className="Upload"  onClick={this.UploadFunction.bind(this)}><Icon type="delete" style={{fontSize:'0.7cm'}}/></Button>
+                  <div className='deleteSw'>
+                    <Switch checked={this.state.deleteSw}  onChange={this.deleteSwFunc.bind(this)} />
+                  </div>
+                  <div className='deleteBtn'>
+                    <Button disabled={this.state.UploadDisable} type="danger" className="Upload"  onClick={this.UploadFunction.bind(this)} ><Icon type="delete" style={{fontSize:'0.7cm'}}/></Button>
+                  </div>
                 </div>
               </Content>
             </Col>
@@ -104,8 +110,29 @@ class UserPage extends React.Component{
       </div>
     )
   }
+  deleteSwFunc(checked){
+    console.log(checked)
+
+    if(checked === true){
+      this.setState({
+        UploadDisable:false,
+        deleteSw:true
+      })
+    }else if(checked === false){
+      this.setState({
+        UploadDisable:true,
+        deleteSw:false
+      })
+    }
+  }
   UploadFunction(event){
     console.log(this.state.Shop)
+    openNotificationWithIcon('success')
+    this.setState({
+      UploadDisable:true,
+      deleteSw:false
+    })
+    /*
     axios.post(baseURL+'/ShopData/add', {
       shopname: this.state.Shop,
       branch : this.state.Branch,
@@ -117,7 +144,7 @@ class UserPage extends React.Component{
     .then( (response) => {
       console.log(response);
       window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
-      openNotificationWithIcon('success')
+      
       
       //set last upload date
      /* axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
@@ -129,10 +156,10 @@ class UserPage extends React.Component{
       .catch( (error) => {
         console.log(error);
       });*/
-    })
+    /*})
     .catch(function (error) {
       console.log(error);
-    });
+    });*/
   }
 
   componentWillMount() {
@@ -176,7 +203,6 @@ class UserPage extends React.Component{
     .catch(function (error) {
       console.log(error);
     }); 
-    this.setState({UploadDisable:false});
   }
   componentDidMount(){
     console.log('componentdDidMount');

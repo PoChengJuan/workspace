@@ -34,6 +34,10 @@ const routes = [
     main: () => <PieChartItem />
   },
   {
+    path: "/test",
+    main: () => <AreaChartItem />
+  },
+  {
     path: "/income",
     main: () => <Abc />
   },
@@ -136,6 +140,9 @@ class MainPage extends React.Component{
                       </li>
                       <li>
                         <Link to='/StockList'>庫存明細</Link>
+                      </li>
+                      <li>
+                        <Link to="/test">測試頁</Link>
                       </li>
                       <li>
                         <Link to="/income">收支圖</Link>
