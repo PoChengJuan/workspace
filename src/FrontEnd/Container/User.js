@@ -279,7 +279,7 @@ class UserPage extends React.Component{
     if(window.sessionStorage.getItem('lastupload') !== moment().format('YYYY-MM-DD')){
       if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm') ||
          (moment().format('hh a')==='06 pm') || (moment().format('hh a')==='07 pm') ||
-         (moment().format('hh a')==='08 pm') || (moment().format('hh a')==='09 pm') ||
+         (moment().format('hh a')==='08 pm') || (moment().format('hh a')==='09 pm')
       ){        
         this.setState({UploadDisable:false});
       } 
