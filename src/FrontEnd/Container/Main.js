@@ -4,9 +4,9 @@ import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom
 import '../../App.css'
 import './Main.css'
 import CSILogo from '../png/Logo.png' 
-import AreaChartItem from '../Components/AreaChart.js';
+import BalanceSheet from '../Components/Balance.js';
 import PieChartItem from '../Components/PieChart.js'
-import ListItem from '../Components/List.js';
+import Info from '../Components/Info.js';
 import BarChartItem from '../Components/BarChart.js'
 import InfoIcom from'../Components/InfoIcon.js'
 import axios from 'axios'
@@ -22,8 +22,8 @@ const {
 const routes = [
   {
     path: "/Info",
-    exact: true,
-    main: () => <ListItem />
+//    exact: true,
+    main: () => <Info />
   },
   {
     path: '/StockList',
@@ -34,19 +34,20 @@ const routes = [
     main: () => <PieChartItem />
   },
   {
-    path: "/test",
-    main: () => <AreaChartItem />
-  },
-  {
-    path: "/income",
-    main: () => <Abc />
+    path: "/BalanceSheet",
+    main: () => <BalanceSheet />
   },
   {
     path: "/test",
     main: () => <BarChartItem width={1500} height={700} />
   }
 ];
-
+const ShopData = [
+  {
+    key:1,
+    shopname:'xxx'
+  }
+]
 const ShopList = (
   
   <Menu>
@@ -78,16 +79,17 @@ class MainPage extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      Shop: '康樂總店',
+      Shop: '',
       ShopList:ShopList,
-      ShopListData:'',
+      ShopListData:ShopData,
       StockPage: false,
       ScrapPage: false,
       isAuth:''}
   }
-  ShopChangeHandle = (e, key) => {
-    console.log('adfad')
-    this.setState({Shop:'測試'})
+  ShopChangeHandle = e => {
+    console.log('dropdown change to '+e.key)
+    this.setState({Shop:this.state.ShopListData[e.key-1].branch})
+    window.localStorage.setItem('branch',this.state.ShopListData[e.key-1].branch);
   }
   StockFunction(e){
     this.setState({StockPage:true})
@@ -123,10 +125,23 @@ class MainPage extends React.Component{
               shape='square'
               logout={()=>this.LogoutFunction()}
             />
-            <Dropdown onVisibleChange={(value)=>this.ShopChangeHandle.bind(this)}  className="Dropdown" overlay={this.state.ShopList} trigger={['hover']}>
-              <a className="ant-dropdown-link" href="#">
-                {this.state.Shop} <Icon type="down" />
-              </a>
+            <Dropdown
+              onClick={this.TestFunction.bind(this)}  
+              className="Dropdown" 
+              overlay={
+                <Menu onClick={this.ShopChangeHandle}  >
+                  {ShopListData.map(item =>
+                  <Menu.Item key={item.key} selectable>
+                    {item.branch}
+                  </Menu.Item>
+                  )}
+                </Menu>
+                } 
+              trigger={['hover']}
+            >
+            <a className="ant-dropdown-link" >
+              {this.state.Shop} <Icon type="down" />
+            </a>
             </Dropdown>
           </Header>
           <Layout>
@@ -142,10 +157,7 @@ class MainPage extends React.Component{
                         <Link to='/StockList'>庫存明細</Link>
                       </li>
                       <li>
-                        <Link to="/test">測試頁</Link>
-                      </li>
-                      <li>
-                        <Link to="/income">收支圖</Link>
+                        <Link to="/BalanceSheet">收支圖</Link>
                       </li>
                       <li>
                         <Link to="/test">投報率</Link>
@@ -184,6 +196,11 @@ class MainPage extends React.Component{
       </div>
     )
   }
+  TestFunction = () =>{
+    console.log('test')
+    //shop.map(item =>
+     // )
+  }
   componentWillMount() {
     console.log('componentWillMount')
     console.log(window.localStorage.getItem('shopname'))
@@ -196,13 +213,15 @@ class MainPage extends React.Component{
       }
       })
     .then( (response) =>{  
-      this.setState({ShopListData:response.data})   
+      this.setState({
+        ShopListData:response.data,
+        Shop:response.data[0].branch
+      })   
       console.log(response.data)   
       //for(var index in response.data) {
        // this.setState({Shop:response.data[index]})
        // console.log(response.data[index])
       //}
-      console.log(this.state.ShopListData[0][1])
     })
     .catch(function (error) {
       console.log(error);

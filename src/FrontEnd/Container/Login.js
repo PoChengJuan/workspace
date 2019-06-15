@@ -93,10 +93,9 @@ class Login extends React.Component{
     //let { from } = this.props.location.state || { from: { pathname: "/" } };
     //let { redirectToReferrer } = this.state;
     const { isAuth } = this.state;
-    console.log('bigbangetw')
     if(isAuth === 'true'){
       console.log("OK")
-      if(window.sessionStorage.getItem('permission') >= 7){
+      if(window.sessionStorage.getItem('permission') >= 9){
         console.log('main')
         return <Redirect to={'Main'} />
       }else{

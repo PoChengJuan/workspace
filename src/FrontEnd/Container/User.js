@@ -239,7 +239,8 @@ class UserPage extends React.Component{
         Display:true});
       }else if(window.sessionStorage.getItem('permission') === '7'){
         this.setState({Position:'老闆',
-        Display:true});
+        //Display:true
+      });
       }else if(window.sessionStorage.getItem('permission') === '5'){
         this.setState({Position:'店長'});
       }else{
@@ -276,7 +277,10 @@ class UserPage extends React.Component{
     //console.log(moment().format('YYYY-MM-DD'))
     //if(window.sessionStorage.getItem('isupload') === 'false'){
     if(window.sessionStorage.getItem('lastupload') !== moment().format('YYYY-MM-DD')){
-      if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm')){        
+      if((moment().format('hh a')==='04 pm') || (moment().format('hh a')==='05 pm') ||
+         (moment().format('hh a')==='06 pm') || (moment().format('hh a')==='07 pm') ||
+         (moment().format('hh a')==='08 pm') || (moment().format('hh a')==='09 pm') ||
+      ){        
         this.setState({UploadDisable:false});
       } 
     }this.setState({UploadDisable:false});

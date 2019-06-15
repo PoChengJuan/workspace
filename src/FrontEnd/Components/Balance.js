@@ -1,6 +1,6 @@
 import React from 'react';
-import { Row, Col,Button } from 'antd';
-import './AreaChart.css'
+import { Row, Col,Button,Table } from 'antd';
+import './Balance.css'
 import {
     XAxis, YAxis, CartesianGrid, Tooltip,
     AreaChart, Area,LineChart,Legend,Line
@@ -12,70 +12,32 @@ import moment from 'moment';
 const dateFormat = 'YYYY-MM-DD';
 const { RangePicker } = DatePicker;
 
-  const defaultdata = [
-    {
-      name: 'Page A', uv: 4000,
-    },
-    {
-      name: 'Page B', uv: 3000,
-    },
-    {
-      name: 'Page C', uv: 2000,
-    },
-    {
-      name: 'Page D', uv: 2780,
-    },
-    {
-      name: 'Page E', uv: 1890,
-    },
-    {
-      name: 'Page F', uv: 2390,
-    },
-    {
-      name: 'Page G', uv: 3490,
-    },
-    {
-        name: 'Page H', uv: 870,
-    },
-    {
-        name: 'Page I', uv: 1490,
-    },
-    {
-        name: 'Page J', uv: 9490,
-    },
-    {
-      name: "2019-06-04",
-      uv: "2000"
-    },
-    {
-      name: "2019-06-04",
-      uv: "2500"
-    }
-      
-  ];
-  const data = [
-    {
-      name: 'Page A', uv: 4000, pv: 2400, amt: 2400,
-    },
-    {
-      name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-    },
-    {
-      name: 'Page C', uv: 2000, pv: 9800, amt: 2290,
-    },
-    {
-      name: 'Page D', uv: 2780, pv: 3908, amt: 2000,
-    },
-    {
-      name: 'Page E', uv: 1890, pv: 4800, amt: 2181,
-    },
-    {
-      name: 'Page F', uv: 2390, pv: 3800, amt: 2500,
-    },
-    {
-      name: 'Page G', uv: 3490, pv: 4300, amt: 2100,
-    },
-  ];
+const columns = [
+  {
+    title: '日期',
+    dataIndex: '日期',
+    key: '日期',
+    width:'10%'
+  },
+  {
+    title: '營業額',
+    dataIndex: '營業額',
+    key: '營業額',
+    width:'30%',
+  },
+  {
+    title: '進貨支出',
+    dataIndex: '進貨支出',
+    key: '進貨支出',
+    width:'30%',
+  },
+  {
+    title: '雜支',
+    dataIndex: '雜支',
+    key: '雜支',
+    width:'30%',
+  }
+];
   
   class CustomizedLabel extends React.Component {
     render() {
@@ -100,15 +62,15 @@ const { RangePicker } = DatePicker;
       );
     }
   }
-class AreaChartItem extends React.Component{
+class BalanceSheet extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      data:defaultdata,
+      data:'',
       startDate:'',
       endDate:'',
       chartWidth:1500,
-      chartHeight:700
+      chartHeight:500
     }      
     this.saveRef = ref => {this.refDom = ref};
     this.updateDimensions = this.updateDimensions.bind(this)
@@ -123,57 +85,39 @@ class AreaChartItem extends React.Component{
               format={dateFormat}
               onChange={this.DatePickerFunction.bind(this)}
             />
-              <AreaChart className = "AreaChart"
-                width={this.state.chartWidth}
-                height={this.state.chartHeight}
-                data={this.state.data}
-                syncId="anyId"
-                margin={{
-                  top: 10, right: 30, left: 0, bottom: 0,
-                  }}
-              >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="日期" />
-              <YAxis />
-              <Tooltip />
-              <Area type="monotone" dataKey="營業額" stroke="#82ca9d" fill="#82ca9d" />
-            </AreaChart>
-            <Button onClick={this.onClick.bind(this)} />
+              
             <LineChart
               width={this.state.chartWidth}
               height={this.state.chartHeight}
-              //data={this.state.data}
-              data={data}
+              data={this.state.data}
+              //data={data}
               margin={{
                 top: 20, right: 30, left: 20, bottom: 10,
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis dataKey="日期" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="uv" stroke="#FF0000" label={<CustomizedLabel />} />
-              <Line type="monotone" dataKey="營業額" stroke="#0000FF" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="營業額" stroke="#0066FF" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="進貨支出" stroke="#77FF00" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="雜支" stroke="#FF8800" label={<CustomizedLabel />} />
 
             </LineChart>
+            <Table columns={columns} dataSource={this.state.data} size='small' pagination={false} scroll={{ y: 240 }} />
+
           </div>
         </Col>
       </Row>      
     )
   }
-  onClick(e){
-    const {clientWidth, clientHeight} = this.refDom;
-    console.log('====================================');
-    console.log(clientWidth, clientHeight, this.refDom);
-    console.log('====================================');
-    this.setState({
-      chartWidth:clientWidth
-    })
 
-  }
   DatePickerFunction(dates, dateStrings) {
-    axios.get(baseURL+'/ShopData/getIncomeData',
+    window.localStorage.setItem("BalancePageDate_Start",dateStrings[0])
+    window.localStorage.setItem("BalancePageDate_End",dateStrings[1])
+
+    axios.get(baseURL+'/ShopData/getRangeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),
@@ -194,25 +138,51 @@ class AreaChartItem extends React.Component{
   componentWillMount(e) {
     window.addEventListener("resize", this.updateDimensions);
 
-    console.log('componentWillMount');
-    axios.get(baseURL+'/ShopData/getIncomeData',
-      {
-        params: {
-          shopname : window.localStorage.getItem('shopname'),
-          branch : window.localStorage.getItem('branch'),
-          start:moment().add('day',-7).format('YYYY-MM-DD'),
-          end:moment().format('YYYY-MM-DD')
-        }
+    var Start = window.localStorage.getItem('BalancePageDate_Start');
+    var End = window.localStorage.getItem('BalancePageDate_End');
+
+    console.log(Start+"和"+End)
+      if(Start === null || End === null){
+        axios.get(baseURL+'/ShopData/getRangeData',
+          {
+            params: {
+              shopname : window.localStorage.getItem('shopname'),
+              branch : window.localStorage.getItem('branch'),
+              start:moment().add('day',-7).format('YYYY-MM-DD'),
+              end:moment().format('YYYY-MM-DD')
+            }
+          }
+        )
+        .then( (response) =>{
+          this.setState({data:response.data})
+          
+          console.log(this.state.data)
+        })
+        .catch(function (error) {
+          console.log(error);
+        }); 
+      }else{
+        axios.get(baseURL+'/ShopData/getRangeData',
+          {
+            params: {
+              shopname : window.localStorage.getItem('shopname'),
+              branch : window.localStorage.getItem('branch'),
+              start:Start,
+              end:End
+            }
+          }
+        )
+        .then( (response) =>{
+          this.setState({data:response.data})
+          
+          console.log(this.state.data)
+        })
+        .catch(function (error) {
+          console.log(error);
+        }); 
       }
-    )
-    .then( (response) =>{
-      this.setState({data:response.data})
-      
-      console.log(this.state.data)
-    })
-    .catch(function (error) {
-      console.log(error);
-    }); 
+    console.log('componentWillMount');
+    
   }
   updateDimensions = (e) => { 
         console.log("AreaChart updateDimensions");
@@ -233,4 +203,4 @@ class AreaChartItem extends React.Component{
   }
 }
 
-export default AreaChartItem
+export default BalanceSheet

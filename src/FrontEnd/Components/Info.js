@@ -4,7 +4,7 @@ import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import moment from 'moment';
 
-import './List.css'
+import './Info.css'
 
 const dateFormat = 'YYYY-MM-DD';
 const testDate = '2019-06-12'
@@ -57,7 +57,7 @@ const income_columns = [
   }
 ];
 
-class ListItem extends React.Component{
+class Info extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -100,6 +100,7 @@ class ListItem extends React.Component{
     }
     componentWillMount() {
         //console.log('componentWillMount');
+        console.log(this.props.shop)
         var date = window.localStorage.getItem('InfoPageDate') 
         if(date === null){
           this.GetData(
@@ -182,4 +183,4 @@ class ListItem extends React.Component{
       }
 }
 
-export default ListItem
+export default Info
