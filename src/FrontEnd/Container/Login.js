@@ -13,7 +13,7 @@ import {
 } from "react-router-dom";
 import moment from 'moment';
 import baseURL from '../Components/AxiosAPI'
-
+import LoginForm from '../Components/LoginForm'
 const { Title } = Typography;
 const {
   Header, Content,
@@ -40,12 +40,14 @@ class Login extends React.Component{
   PSHandle(e){
     this.setState({pwInput: e.target.value});
   }
-  LoginFunction(event){
+  LoginFunction(user , pw){
     //axios.get('http://localhost:8080/User/getMember?name='+this.state.userInput)
     axios.get(baseURL+'/User/getMember',
     {params: {
-      name : this.state.userInput
-      ,password : md5(this.state.pwInput)}}
+      //name : this.state.userInput
+      name : user
+      //,password : md5(this.state.pwInput)
+      ,password : md5(pw)}}
       )
     .then( (response) =>{
       for(var index in response.data[0]) {
@@ -78,7 +80,7 @@ class Login extends React.Component{
         }
 
       } 
-      if(md5(this.state.pwInput) === this.state.Password){
+      if(md5(pw) === this.state.Password){
         window.sessionStorage.setItem('isAuth','true');  
         this.setState({isAuth:'true'});
       }
@@ -109,7 +111,6 @@ class Login extends React.Component{
           <Layout >
             <Col span={24}>
               <Header className="Header">
-                <a><p>Forget Password?</p></a>
               </Header>
             </Col>
             <Col span={24}>
@@ -117,11 +118,7 @@ class Login extends React.Component{
                 <div className="LoginContent">
                   <img src={CSILogo} alt='CSILogo' />
                   <div>
-                    <Title level={3}>User:<Input className="UserInput" autoFocus={true} defaultValue = {this.state.userInput} onChange={this.UserHandle.bind(this)} /></Title>
-                    <Title level={3}>PW:<Input.Password className="UserInput" defaultValue = {this.state.pwInput} onChange={this.PSHandle.bind(this)} onPressEnter={this.LoginFunction.bind(this)} placeholder="input password" /></Title>              
-                  </div>
-                  <div className='LoginButton'>
-                    <Button  type="primary" onClick={this.LoginFunction.bind(this)}>Login</Button>
+                    <LoginForm userInput = {this.state.userInput} pwInput = {this.state.pwInput} submit = {this.LoginFunction.bind(this)} />
                   </div>
                 </div>
               </Content>
