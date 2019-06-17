@@ -56,14 +56,14 @@ const income_columns = [
     width:'2cm',
   }
 ];
-
+const datedefault = [];
 class Info extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-          data:'',
-          expense:'',
-          income:'',
+          data:datedefault,
+          expense:datedefault,
+          income:datedefault,
           lastUploadDate:testDate,
           stockTableData:'',
           date:''

@@ -13,25 +13,25 @@ const data = [
     {
       key: '1',
       name: 'John Brown',
-      age: 32,
+      item1: 32,
       address: 'New York No. 1 Lake Park',
     },
     {
       key: '2',
       name: 'Jim Green',
-      age: 42,
+      item1: 42,
       address: 'London No. 1 Lake Park',
     },
     {
       key: '3',
       name: 'Joe Black',
-      age: 32,
+      item1: 32,
       address: 'Sidney No. 1 Lake Park',
     },
     {
       key: '4',
       name: 'Jim Red',
-      age: 32,
+      item1: 32,
       address: 'London No. 2 Lake Park',
     },
   ];
@@ -64,97 +64,62 @@ class StockList extends React.Component{
             children:[
                 {
                     title: '單品豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item1',
+                    key: 'item1',
+                    sorter: (a, b) => a.item1 - b.item1,
+                    sortOrder: sortedInfo.columnKey === 'item1' && sortedInfo.order,
                 },
                 {
                     title: '義式豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item2',
+                    key: 'item2',
+                    sorter: (a, b) => a.item2 - b.item2,
+                    sortOrder: sortedInfo.columnKey === 'item2' && sortedInfo.order,
                 },
                 {
                     title: '單品豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item3',
+                    key: 'item3',
+                    sorter: (a, b) => a.item3 - b.item3,
+                    sortOrder: sortedInfo.columnKey === 'item3' && sortedInfo.order,
                 },
                 {
                     title: '義式豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item4',
+                    key: 'item4',
+                    sorter: (a, b) => a.item4 - b.item4,
+                    sortOrder: sortedInfo.columnKey === 'item4' && sortedInfo.order,
                 },
                 {
                     title: '單品豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item5',
+                    key: 'item5',
+                    sorter: (a, b) => a.item5 - b.item5,
+                    sortOrder: sortedInfo.columnKey === 'item5' && sortedInfo.order,
                 },
                 {
                     title: '義式豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item6',
+                    key: 'item6',
+                    sorter: (a, b) => a.item6 - b.item6,
+                    sortOrder: sortedInfo.columnKey === 'item6' && sortedInfo.order,
                 },
                 {
                     title: '單品豆',
-                    dataIndex: 'age',
-                    key: 'age',
-                    sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    dataIndex: 'item7',
+                    key: 'item7',
+                    sorter: (a, b) => a.item7 - b.item7,
+                    sortOrder: sortedInfo.columnKey === 'item7' && sortedInfo.order,
                 },
                 {
                     title: '義式豆',
-                    dataIndex: 'age',
-                    key: 'age',
+                    dataIndex: 'item8',
+                    key: 'item8',
                     sorter: (a, b) => a.age - b.age,
-                    sortOrder: sortedInfo.columnKey === 'age' && sortedInfo.order,
+                    sortOrder: sortedInfo.columnKey === 'item8' && sortedInfo.order,
                 },
             ]
         },
-        /*{
-            title:'支出',
-            children:[
-                {
-                    title: '進貨支出',
-                    dataIndex: 'address',
-                    key: 'address',
-                    filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-                    filteredValue: filteredInfo.address || null,
-                    onFilter: (value, record) => record.address.includes(value),
-                    sorter: (a, b) => a.address.length - b.address.length,
-                    sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-                },
-                {
-                    title: '雜支',
-                    dataIndex: 'address',
-                    key: 'address',
-                    filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-                    filteredValue: filteredInfo.address || null,
-                    onFilter: (value, record) => record.address.includes(value),
-                    sorter: (a, b) => a.address.length - b.address.length,
-                    sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-                }
-            ]
-        },
-        {
-            title: '營業額',
-            dataIndex: 'address',
-            key: 'address',
-            filters: [{ text: 'London', value: 'London' }, { text: 'New York', value: 'New York' }],
-            filteredValue: filteredInfo.address || null,
-            onFilter: (value, record) => record.address.includes(value),
-            sorter: (a, b) => a.address.length - b.address.length,
-            sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-        },*/
         ];
         return (
             <div>
@@ -180,6 +145,8 @@ class StockList extends React.Component{
           filteredInfo: filters,
           sortedInfo: sorter,
         });
+        console.log(sorter)
+        console.log(this.state.sortedInfo)
       };
     DatePickerFunction(dates, dateStrings) {
         axios.get(baseURL+'/ShopData/getIncomeData',
