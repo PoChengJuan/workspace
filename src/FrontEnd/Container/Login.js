@@ -95,7 +95,7 @@ class Login extends React.Component{
     const { isAuth } = this.state;
     if(isAuth === 'true'){
       console.log("OK")
-      if(window.sessionStorage.getItem('permission') >= 9){
+      if(window.sessionStorage.getItem('permission') >= 7){
         console.log('main')
         return <Redirect to={'Main'} />
       }else{

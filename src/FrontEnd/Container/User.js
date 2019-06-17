@@ -132,7 +132,7 @@ class UserPage extends React.Component{
                       dataSource={data}
                       renderItem={item => (
                         <List.Item key={item.key} actions={
-                          [<InputNumber key={item.key} className="Number" value={item.stock} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
+                          [<InputNumber key={item.key} className="Number" value={item.stock/item.mult} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
                           <InputNumber key={item.key} className="Order" value={item.order} placeholder="叫貨" onChange={(value)=>this.OrderValueStore(item,value)} decimalSeparator="." />]
                           }>
                           {item.title}
@@ -175,10 +175,13 @@ class UserPage extends React.Component{
     )
   }
   UploadFunction(event){
-    /*console.log(this.state.Shop)
+    const{data} = this.state
     this.state.data.map(item=>{
-      console.log(item.title)
-    })*/
+      console.log(item.stock*item.mult)
+      item.stock = item.stock * item.mult
+    })
+    this.setState({data});
+    //this.setState({data})
     axios.post(baseURL+'/ShopData/add', {
       shopname: this.state.Shop,
       branch : this.state.Branch,
@@ -239,7 +242,7 @@ class UserPage extends React.Component{
         Display:true});
       }else if(window.sessionStorage.getItem('permission') === '7'){
         this.setState({Position:'老闆',
-        //Display:true
+        Display:true
       });
       }else if(window.sessionStorage.getItem('permission') === '5'){
         this.setState({Position:'店長'});
