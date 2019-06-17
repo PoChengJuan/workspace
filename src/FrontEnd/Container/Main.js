@@ -160,7 +160,10 @@ class MainPage extends React.Component{
                         <Link to="/BalanceSheet">收支圖</Link>
                       </li>
                       <li>
-                        <Link to="/test">投報率</Link>
+                        <Link to="/test">達成率</Link>
+                      </li>
+                      <li>
+                        <a>統計</a>
                       </li>
                       <li>
                         <a onClick={this.StockFunction.bind(this)}>盤點</a>

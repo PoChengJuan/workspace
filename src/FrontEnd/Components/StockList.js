@@ -60,7 +60,7 @@ class StockList extends React.Component{
             sortOrder: sortedInfo.columnKey === 'name' && sortedInfo.order,
         },
         {
-            title: '品項',
+            title: '庫存品項',
             children:[
                 {
                     title: '單品豆',
@@ -120,7 +120,7 @@ class StockList extends React.Component{
                 },
             ]
         },
-        {
+        /*{
             title:'支出',
             children:[
                 {
@@ -154,7 +154,7 @@ class StockList extends React.Component{
             onFilter: (value, record) => record.address.includes(value),
             sorter: (a, b) => a.address.length - b.address.length,
             sortOrder: sortedInfo.columnKey === 'address' && sortedInfo.order,
-        },
+        },*/
         ];
         return (
             <div>
