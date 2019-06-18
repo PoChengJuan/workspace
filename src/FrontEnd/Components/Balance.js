@@ -1,9 +1,8 @@
 import React from 'react';
-import { Row, Col,Button,Table } from 'antd';
+import { Row, Col,Table } from 'antd';
 import './Balance.css'
 import {
-    XAxis, YAxis, CartesianGrid, Tooltip,
-    AreaChart, Area,LineChart,Legend,Line
+    XAxis, YAxis, CartesianGrid, Tooltip,LineChart,Legend,Line
   } from 'recharts';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
@@ -16,17 +15,17 @@ const { RangePicker } = DatePicker;
 const defaultData = [
   {
     key:1,
-    "Date":"2019-06-04",
-    "Turnover":"2000",
-    "OrderExpense":0,
-    "OtherExpense":0
+    "日期":"2019-06-04",
+    "營業額":"2000",
+    "進貨支出":0,
+    "雜支":0
   },
   {
     key:2,
-    "Date":"2019-06-12",
-    "Turnover":"1345",
-    "OrderExpense":"75",
-    "OtherExpense":"0"
+    "日期":"2019-06-12",
+    "營業額":"1345",
+    "進貨支出":"75",
+    "雜支":"0"
   }];
   class CustomizedLabel extends React.Component {
     render() {
@@ -56,9 +55,9 @@ class BalanceSheet extends React.Component{
     super(props);
     this.state = {
       data:defaultData,
-      startDate:'',
-      endDate:'',
-      chartWidth:1500,
+      startDate:moment().add('day',-7).format('YYYY-MM-DD'),
+      endDate:moment().format('YYYY-MM-DD'),
+      chartWidth:this.props.Width,
       chartHeight:500
     }      
     this.saveRef = ref => {this.refDom = ref};
@@ -70,36 +69,36 @@ class BalanceSheet extends React.Component{
     const columns = [
       {
         title: '日期',
-        dataIndex: 'Date',
-        key: 'Date',
+        dataIndex: '日期',
+        key: '日期',
         width:'10%',
-        sorter: (a, b) => a.Date.Date - b.Date.Date,
-        sortOrder: sortedInfo.columnKey === 'Date' && sortedInfo.order,
+        sorter: (a, b) => a.日期.Date - b.日期.Date,
+        sortOrder: sortedInfo.columnKey === '日期' && sortedInfo.order,
       },
       {
         title: '營業額',
-        dataIndex: 'Turnover',
-        key: 'Turnover',
+        dataIndex: '營業額',
+        key: '營業額',
         width:'30%',
         defaultSortOrder: 'descend',
-        sorter: (a, b) => a.Turnover - b.Turnover,
-        sortOrder: sortedInfo.columnKey === 'Turnover' && sortedInfo.order,
+        sorter: (a, b) => a.營業額 - b.營業額,
+        sortOrder: sortedInfo.columnKey === '營業額' && sortedInfo.order,
       },
       {
         title: '進貨支出',
-        dataIndex: 'OrderExpense',
-        key: 'OrderExpense',
+        dataIndex: '進貨支出',
+        key: '進貨支出',
         width:'30%',
-        sorter: (a, b) => a.OrderExpense - b.OrderExpense,
-        sortOrder: sortedInfo.columnKey === 'OrderExpense' && sortedInfo.order,
+        sorter: (a, b) => a.進貨支出 - b.進貨支出,
+        sortOrder: sortedInfo.columnKey === '進貨支出' && sortedInfo.order,
       },
       {
         title: '雜支',
-        dataIndex: 'OtherExpense',
-        key: 'OtherExpense',
+        dataIndex: '雜支',
+        key: '雜支',
         width:'30%',
-        sorter: (a, b) => a.OtherExpense - b.OtherExpense,
-        sortOrder: sortedInfo.columnKey === 'OtherExpense' && sortedInfo.order,
+        sorter: (a, b) => a.雜支 - b.雜支,
+        sortOrder: sortedInfo.columnKey === '雜支' && sortedInfo.order,
       }
     ];
     return(
@@ -107,7 +106,7 @@ class BalanceSheet extends React.Component{
         <Col span={24}>
           <div ref={this.saveRef}>
             <RangePicker
-              defaultValue={[moment(moment().add('day',-7).format('YYYY-MM-DD'), dateFormat), moment(moment().format('YYYY-MM-DD'), dateFormat)]}
+              defaultValue={[moment(this.state.startDate, dateFormat), moment(this.state.endDate, dateFormat)]}
               format={dateFormat}
               onChange={this.DatePickerFunction.bind(this)}
             />
@@ -126,9 +125,9 @@ class BalanceSheet extends React.Component{
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="Turnover" stroke="#0066FF" label={<CustomizedLabel />} />
-              <Line type="monotone" dataKey="OrderExpense" stroke="#77FF00" label={<CustomizedLabel />} />
-              <Line type="monotone" dataKey="OtherExpense" stroke="#FF8800" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="營業額" stroke="#0066FF" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="進貨支出" stroke="#77FF00" label={<CustomizedLabel />} />
+              <Line type="monotone" dataKey="雜支" stroke="#FF8800" label={<CustomizedLabel />} />
 
             </LineChart>
             <Table columns={columns} dataSource={this.state.data} size='small' pagination={false} scroll={{ y: 240 }} onChange={this.handleChange} />
@@ -181,13 +180,16 @@ class BalanceSheet extends React.Component{
             params: {
               shopname : window.localStorage.getItem('shopname'),
               branch : window.localStorage.getItem('branch'),
-              start:moment().add('day',-7).format('YYYY-MM-DD'),
+              start:moment().add('day',-6).format('YYYY-MM-DD'),
               end:moment().format('YYYY-MM-DD')
             }
           }
         )
         .then( (response) =>{
-          this.setState({data:response.data})
+          this.setState({
+            data:response.data,
+            startDate:moment().add('day',-6).format('YYYY-MM-DD'),
+            endDate:moment().format('YYYY-MM-DD')})
           
           console.log(this.state.data)
         })
@@ -206,13 +208,17 @@ class BalanceSheet extends React.Component{
           }
         )
         .then( (response) =>{
-          this.setState({data:response.data})
+          this.setState({
+            data:response.data})
           
           console.log(this.state.data)
         })
         .catch(function (error) {
           console.log(error);
         }); 
+        this.setState({
+          startDate:Start,
+          endDate:End})
       }
     console.log('componentWillMount');
     

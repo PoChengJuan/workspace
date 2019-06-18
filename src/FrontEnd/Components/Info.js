@@ -92,27 +92,32 @@ class Info extends React.Component{
     DatePickerFunction(dates, dateStrings) {
       console.log(dateStrings)
       window.localStorage.setItem("InfoPageDate",dateStrings)
-      this.GetData(window.localStorage.getItem('shopname'),window.localStorage.getItem('branch'),dateStrings);
+      //this.GetData(window.localStorage.getItem('shopname'),window.localStorage.getItem('branch'),dateStrings);
+      this.GetData(window.localStorage.getItem('shopname'),this.props.Branch,dateStrings);
     }
     componentWillUpdate(){
       //console.log('componentWillUpdate');
 
     }
+    componentWillReceiveProps(nextProps){
+      //console.log(nextProps)
+    }
     componentWillMount() {
         //console.log('componentWillMount');
-        console.log(this.props.shop)
         var date = window.localStorage.getItem('InfoPageDate') 
         if(date === null){
           this.GetData(
             window.localStorage.getItem('shopname'),
-            window.localStorage.getItem('branch'),
+            //window.localStorage.getItem('branch'),
+            this.props.Branch,
             moment().format('YYYY-MM-DD')
             );
             this.setState({date:moment().format('YYYY-MM-DD')})
         }else{
           this.GetData(
             window.localStorage.getItem('shopname'),
-            window.localStorage.getItem('branch'),
+            //window.localStorage.getItem('branch'),
+            this.props.Branch,
             window.localStorage.getItem('InfoPageDate')
             );
             this.setState({date:window.localStorage.getItem('InfoPageDate')})
