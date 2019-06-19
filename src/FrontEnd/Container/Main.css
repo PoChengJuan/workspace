@@ -22,13 +22,18 @@
 ul{
     margin: 0% auto;
     font-size: 18px;
+    padding: 0px;
 }
 
-.SiberItem{
+.SiderItem{
     margin-top: 1.5cm;
+    margin-right: 0%;
 }
 .Sider ul li{
-    margin: 10%;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    padding-left: 0.5cm;
+    text-align: left;
 }
 .Header{
     padding-left: 1%;

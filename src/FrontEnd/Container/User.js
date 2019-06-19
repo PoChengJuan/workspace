@@ -132,7 +132,7 @@ class UserPage extends React.Component{
                       dataSource={data}
                       renderItem={item => (
                         <List.Item key={item.key} actions={
-                          [<InputNumber key={item.key} className="Number" value={item.stock/item.mult} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
+                          [<InputNumber key={item.key} className="Number" value={item.stock} onChange={(value) => this.StockValueStore(item,value)} defaultValue='0'/>,
                           <InputNumber key={item.key} className="Order" value={item.order} placeholder="叫貨" onChange={(value)=>this.OrderValueStore(item,value)} decimalSeparator="." />]
                           }>
                           {item.title}
@@ -176,11 +176,24 @@ class UserPage extends React.Component{
   }
   UploadFunction(event){
     const{data} = this.state
-    this.state.data.map(item=>{
-      console.log(item.stock*item.mult)
-      item.stock = item.stock * item.mult
+    
+    axios.get(baseURL+'/ShopData/getTodayData',
+    {
+      params: {
+        shopname: this.state.Shop,
+        branch: this.state.Branch,
+        today: moment().format('YYYY-MM-DD')
+      }
     })
-    this.setState({data});
+    .then( (response) =>{
+      console.log(response.data);
+      if(response.data.length === 0){
+      }else{
+      }
+    })
+    .catch( (error) => {
+      console.log(error);
+    })
     //this.setState({data})
     axios.post(baseURL+'/ShopData/add', {
       shopname: this.state.Shop,
@@ -229,6 +242,7 @@ class UserPage extends React.Component{
       .then( (response) =>{
       for(var index in response.data){
         response.data[index].order = 0;
+        response.data[index].scrap = 0;
       }
       this.setState({data:response.data,
         Shop:window.localStorage.getItem('shopname'),

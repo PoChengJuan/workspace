@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Dropdown, Icon, Popover,Button, Avatar, Layout } from 'antd';
+import { Menu, Dropdown, Icon, Popover,Button, Avatar, Layout,Row,Col } from 'antd';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import '../../App.css'
 import './Main.css'
@@ -63,7 +63,8 @@ class MainPage extends React.Component{
       BranchList:BranchData,
       StockPage: false,
       ScrapPage: false,
-      isAuth:''}
+      isAuth:'',
+      Display:''}
       this.saveRef = ref => {this.refDom = ref};
   }
   ShopChangeHandle = e => {
@@ -86,28 +87,28 @@ class MainPage extends React.Component{
       {
         path: "/Info",
         exact: true,
-        main: () => <Info Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: () => <Info Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       },
       {
         path: '/StockList',
-        main: () => <StockList Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: () => <StockList Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       },
       {
         path: "/bubblegum",
-        main: () => <PieChartItem Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: () => <PieChartItem Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       },
       {
         path: "/BalanceSheet",
-        main: () => <BalanceSheet Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: () => <BalanceSheet Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       },
       {
         path: "/Statistics",
-        main: ()=> <Statistics Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: ()=> <Statistics Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       },
       {
         path: "/Achieving",
         //main: () => <BarChartItem width={1500} height={700} />
-        main: () => <Achieving Branch={this.state.Branch} Width={this.refDom.clientWidth} />
+        main: () => <Achieving Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
       }
     ];
     const { StockPage,ScrapPage,isAuth,BranchList } = this.state;
@@ -145,63 +146,73 @@ class MainPage extends React.Component{
                   )}
                 </Menu>
                 } 
-              trigger={['hover']}
-            >
-            <a className="ant-dropdown-link" >
-              {this.state.Branch} <Icon type="down" />
-            </a>
+              trigger={['click']}
+              >
+              <a className="ant-dropdown-link" >
+                {this.state.Branch} <Icon type="down" />
+              </a>
             </Dropdown>
           </Header>
-          <Layout>
-            <Router>
-              <Sider className="Sider">
-                <div  className="SiberItem">
-                  <ul>
-                    <ul style={{ listStyleType: "none", padding: 0 }}>
-                      <li>
-                        <Link to='/Info'>店家資訊</Link>
-                      </li>
-                      <li>
-                        <Link to='/StockList'>庫存明細</Link>
-                      </li>
-                      <li>
-                        <Link to='/BalanceSheet'>收支圖</Link>
-                      </li>
-                      <li>
-                        <Link to='/Achieving'>達成率</Link>
-                      </li>
-                      <li>
-                        <Link to='/Statistics'>統計</Link>
-                      </li>
-                      <li>
-                        <a onClick={this.StockFunction.bind(this)}>盤點</a>
-                      </li>
-                      <li>
-                        <a onClick={this.ScrapFunction.bind(this)}>報廢</a>
-                      </li>
-                    </ul>
-                  </ul>
-                </div>
-              </Sider>
-              <Content className="Content">
-                <div style={{ display: "flex",width: "100%",height: "100%" }}>
-                  <div ref={this.saveRef} style={{ flex: 1, padding: "10px", width: "0%" }}>
-                    {routes.map((route, index) => (
-                      // Render more <Route>s with the same paths as
-                      // above, but different components this time.
-                      <Route
-                        key={index}
-                        path={route.path}
-                        exact={route.exact}
-                        component={route.main}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </Content>
-            </Router>
-            <Footer className="Footer">Information</Footer>
-          </Layout>
+          <Row>
+            <Layout>
+              <Router>
+                <Col xs={{span:0}} sm={{span:0}} md={{span:2}} xl={{span:2}} className="Sider">
+                  <Sider className="Sider">
+                    <div  className="SiderItem">
+                      <ul style={{ listStyleType: "none", padding: 0 }}>
+                        <li>
+                          <Link to='/Info'>店家資訊</Link>
+                        </li>
+                        <li>
+                          <Link to='/StockList'>庫存明細</Link>
+                        </li>
+                        <li>
+                          <Link to='/BalanceSheet'>收支圖</Link>
+                        </li>
+                        <li>
+                        {this.state.Display &&
+                          <Link to='/Achieving'>達成率</Link>
+                        }
+                        </li>
+                        <li>
+                        {this.state.Display &&
+                          <Link to='/Statistics'>統計</Link>
+                        }
+                        </li>
+                        <li>
+                          <a onClick={this.StockFunction.bind(this)}>盤點</a>
+                        </li>
+                        <li>
+                        {this.state.Display &&
+                           <a onClick={this.ScrapFunction.bind(this)}>報廢</a>
+                        }
+                        </li>
+                      </ul>
+                    </div>
+                  </Sider>
+                </Col>
+                <Col xs={{span:24}} sm={{span:24}} md={{span:22}} xl={{span:22}}>
+                  <Content className="Content">
+                    <div style={{ display: "flex",width: "100%",height: "100%" }}>
+                      <div ref={this.saveRef} style={{ flex: 1, padding: "10px", width: "0%" }}>
+                        {routes.map((route, index) => (
+                          // Render more <Route>s with the same paths as
+                          // above, but different components this time.
+                          <Route
+                            key={index}
+                            path={route.path}
+                            exact={route.exact}
+                            component={route.main}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </Content>
+                </Col>
+              </Router>
+            </Layout>
+          </Row>
+          <Footer className="Footer">Information</Footer>
         </Layout>
         
       </div>
@@ -238,7 +249,18 @@ class MainPage extends React.Component{
     .catch(function (error) {
       console.log(error);
     });
+
+    if(window.sessionStorage.getItem('permission') === '9'){
+      this.setState({Position:'開發者',
+      Display:true});
+    }else if(window.sessionStorage.getItem('permission') === '7'){
+      this.setState({Position:'老闆',
+      Display:false
+      //  Display:true
+      });
+    }
   }
+  
   
 }
 

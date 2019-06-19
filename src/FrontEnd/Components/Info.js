@@ -172,7 +172,7 @@ class Info extends React.Component{
           this.setState({income:''});
           console.log(error);
         }); 
-        axios.get(baseURL+'/ShopData/getLastUploadDate',
+        /*axios.get(baseURL+'/ShopData/getLastUploadDate',
         {
           params: {
             shop: shop,
@@ -184,7 +184,7 @@ class Info extends React.Component{
         })
         .catch( (error) => {
           console.log(error);
-        }); 
+        }); */
       }
 }
 
