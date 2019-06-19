@@ -265,62 +265,58 @@ class StockList extends React.Component{
     var End = window.localStorage.getItem('StockListPageDate_End');
 
     axios.get(baseURL+'/ShopData/getStockItem',
-          {
-            params: {
-              shopname : window.localStorage.getItem('shopname'),
-              branch : window.localStorage.getItem('branch'),
-            }
-          }
-        )
-        .then( (response) =>{
-          this.setState({itemList:response.data})
-          console.log(this.state.itemList)
-        })
-        .catch(function (error) {
-          console.log(error);
-        }); 
-    console.log(Start+"和"+End)
-      if(Start === null || End === null){
-        axios.get(baseURL+'/ShopData/getRangeStock',
-          {
-            params: {
-              shopname : window.localStorage.getItem('shopname'),
-              branch : window.localStorage.getItem('branch'),
-              start:moment().add('day',-6).format('YYYY-MM-DD'),
-              end:moment().format('YYYY-MM-DD')
-            }
-          }
-        )
-        .then( (response) =>{
-          this.setState({data:response.data})
-          console.log(this.state.data)
-        })
-        .catch(function (error) {
-          console.log(error);
-        }); 
-      }else{
-        axios.get(baseURL+'/ShopData/getRangeStock',
-          {
-            params: {
-              shopname : window.localStorage.getItem('shopname'),
-              branch : window.localStorage.getItem('branch'),
-              start:Start,
-              end:End
-            }
-          }
-        )
-        .then( (response) =>{
-          this.setState({data:response.data})
-          
-          console.log(this.state.data)
-        })
-        .catch(function (error) {
-          console.log(error);
-        }); 
-        this.setState({
-          startDate:Start,
-          endDate:End})
+    {
+      params: {
+        shopname : window.localStorage.getItem('shopname'),
+        branch : window.localStorage.getItem('branch'),
       }
+    })
+    .then( (response) =>{
+      this.setState({itemList:response.data})
+      console.log(this.state.itemList)
+    })
+    .catch(function (error) {
+      console.log(error);
+    }); 
+    console.log(Start+"和"+End)
+    if(Start === null || End === null){
+      axios.get(baseURL+'/ShopData/getRangeStock',
+      {
+        params: {
+          shopname : window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch'),
+          start:moment().add('day',-6).format('YYYY-MM-DD'),
+          end:moment().format('YYYY-MM-DD')
+        }
+      })
+      .then( (response) =>{
+        this.setState({data:response.data})
+        console.log(this.state.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      }); 
+    }else{
+      axios.get(baseURL+'/ShopData/getRangeStock',
+      {
+        params: {
+          shopname : window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch'),
+          start:Start,
+          end:End
+        }
+      })
+      .then( (response) =>{
+        this.setState({data:response.data})  
+        console.log(this.state.data)
+      })
+      .catch(function (error) {
+        console.log(error);
+      }); 
+      this.setState({
+        startDate:Start,
+        endDate:End})
+    }
     console.log('componentWillMount');
   }
   componentWillUnmount() {
