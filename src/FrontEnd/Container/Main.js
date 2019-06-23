@@ -16,6 +16,7 @@ import StockList from '../Components/StockList.js'
 import Abc from '../Components/abcd.js'
 import Achieving from '../Components/Achieving.js'
 import Statistics from '../Components/Statistics.js'
+import DropdownList from '../Components/DropdownLIst.js'
 const {
   Header, Footer, Sider, Content,
 } = Layout;
@@ -132,10 +133,10 @@ class MainPage extends React.Component{
               branch={window.localStorage.getItem('branch')}
               permission = {window.sessionStorage.getItem('permission')}
               shape='square'
+              dropdown = {false}
               logout={()=>this.LogoutFunction()}
             />
             <Dropdown
-              onClick={this.TestFunction.bind(this)}  
               className="Dropdown" 
               overlay={
                 <Menu onClick={this.ShopChangeHandle}  >
@@ -183,9 +184,8 @@ class MainPage extends React.Component{
                           <a onClick={this.StockFunction.bind(this)}>盤點</a>
                         </li>
                         <li>
-                        {this.state.Display &&
                            <a onClick={this.ScrapFunction.bind(this)}>報廢</a>
-                        }
+                        
                         </li>
                       </ul>
                     </div>
@@ -217,11 +217,6 @@ class MainPage extends React.Component{
         
       </div>
     )
-  }
-  TestFunction = () =>{
-    //console.log('test')
-    //shop.map(item =>
-     // )
   }
   componentWillMount() {
     console.log('componentWillMount')

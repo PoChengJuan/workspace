@@ -72,8 +72,6 @@ class BalanceSheet extends React.Component{
         dataIndex: '日期',
         key: '日期',
         width:'10%',
-        sorter: (a, b) => a.日期.Date - b.日期.Date,
-        sortOrder: sortedInfo.columnKey === '日期' && sortedInfo.order,
       },
       {
         title: '營業額',

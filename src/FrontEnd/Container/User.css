@@ -14,3 +14,9 @@
     right: 0.5cm;
     width: 1.5cm;
 }
+.delete{
+  position: absolute;
+  top:0.3cm;
+    left: 0.5cm;
+    width: 1.5cm;
+}

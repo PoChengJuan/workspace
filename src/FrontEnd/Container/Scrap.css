@@ -7,3 +7,9 @@
 .deleteSw{
   margin-top:5px;
 }
+.store{
+  position: absolute;
+  top:0.3cm;
+    left: 0.5cm;
+    width: 1.5cm;
+}

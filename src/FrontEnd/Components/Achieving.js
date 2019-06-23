@@ -76,7 +76,6 @@ class Achieving extends React.Component{
           format={monthFormat} 
           onChange={this.MonthPickerFunction.bind(this)}
           />
-        <p> Achieving</p>
         <BarChart
           width={chartWidth}
           height={500}

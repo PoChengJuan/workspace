@@ -78,7 +78,9 @@ class Info extends React.Component{
                   format={dateFormat} 
                   onChange={this.DatePickerFunction.bind(this)}
                   />
-                <h2>{this.state.lastUploadDate}</h2>
+                <h2>{
+                  //this.state.lastUploadDate
+                  }</h2>
                 <h3 style={{ marginBottom: 16 }}>庫存</h3>
                 <Table columns={stock_columns} dataSource={data} size='small' pagination={false} scroll={{ y: 240 }} />
                 <h3 style={{ marginBottom: 16 }}>支出</h3>

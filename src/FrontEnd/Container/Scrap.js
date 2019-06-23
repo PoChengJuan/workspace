@@ -19,20 +19,24 @@ const openNotificationWithIcon = type => {
 var income = [
   '營業額'
 ];
-class UserPage extends React.Component{
+class ScrapPage extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       isAuth: '',
       UploadDisable:true,
-      deleteSw:false,
       data:'',
+      expense:'',
+      Income:'',
       Shop:'',
       Name:'',
       Branch:'',
       Permission:'',
+      Position:'',
       Display:false,
-      MainPage:false
+      MainPage:false,
+      UserPage:false,
+      Update:false
     }      
   }
   LogoutFunction(){
@@ -41,7 +45,6 @@ class UserPage extends React.Component{
   }
   ScrapValueStore = (item, Num)=>{
     const {data} = this.state;
-    console.log('order:',Num);
     data.forEach(data=>{
       if(data.key === item.key){
         data.scrap = Num
@@ -49,17 +52,24 @@ class UserPage extends React.Component{
     })
     this.setState({ data });
   }
-
+  DataUpdata=(Update)=>{
+    this.setState({Update:true})
+  }
   MainFnction(e){
     this.setState({MainPage:true})
   }
+  UserFunction(e){
+    this.setState({UserPage:true})
+  }
   render(){
-    const { data,isAuth,MainPage } = this.state;
+    const { data,isAuth,MainPage,UserPage } = this.state;
     if(isAuth === 'false'){
       console.log('logout');
       return <Redirect to={'/'} />
     }else if(MainPage === true){
       return <Redirect to={'Main'} />
+    }else if(UserPage === true){
+      return <Redirect to={'User'} />
     }
     return(
       <div className="App">
@@ -68,12 +78,15 @@ class UserPage extends React.Component{
             <Col span={24}>
               <Header className="Header">
                 <div>
+                    <Icon type="bars" className='store' style={{fontSize:'1cm',color:'#08c'}} onClick={this.UserFunction.bind(this)} />
                     <InfoIcom 
                         name={window.localStorage.getItem('name')}
                         branch={window.localStorage.getItem('branch')}
                         permission = {window.sessionStorage.getItem('permission')}
                         shape='circle'
                         size={60}
+                        dropdown = {true}
+                        shopchange = {this.DataUpdata}
                         logout={()=>this.LogoutFunction()}
                     />
                     <Icon type="line-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
@@ -127,61 +140,84 @@ class UserPage extends React.Component{
   }
   UploadFunction(event){
     console.log(this.state.Shop)
-    openNotificationWithIcon('success')
     this.setState({
       UploadDisable:true,
       deleteSw:false
     })
-    /*
-    axios.post(baseURL+'/ShopData/add', {
-      shopname: this.state.Shop,
-      branch : this.state.Branch,
-      name:this.state.Name,
-      date:moment().format('YYYY-MM-DD'),
-      time:moment().format('hh:mm'),
-      stock:this.state.data
+    axios.get(baseURL+'/ShopData/getTodayData',
+    {
+      params: {
+        shopname: this.state.Shop,
+        branch: window.localStorage.getItem('branch'),
+        today: moment().format('YYYY-MM-DD')
+      }
     })
-    .then( (response) => {
-      console.log(response);
-      window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
-      
-      
-      //set last upload date
-     /* axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
-        date:moment().format('YYYY-MM-DD')
-      })
-      .then( (response) => {
-        console.log(response);
-      })
-      .catch( (error) => {
-        console.log(error);
-      });*/
-    /*})
-    .catch(function (error) {
+    .then( (response) =>{
+      console.log(response.data);
+      if(response.data.length === 0){
+        // No Data
+        console.log("false")
+        axios.post(baseURL+'/ShopData/add', {
+          shopname: this.state.Shop,
+          branch : window.localStorage.getItem('branch'),
+          name:this.state.Name,
+          date:moment().format('YYYY-MM-DD'),
+          time:moment().format('hh:mm'),
+          stock:this.state.data,
+          expense:this.state.expense,
+          income:this.state.Income
+        })
+        .then( (response) => {
+          console.log(response);
+          //window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }else{
+        // Updata
+        console.log(this.state.Name)
+        console.log(moment().format('hh:mm'))
+        console.log(this.state.data)
+
+        axios.put(baseURL+'/ShopData/UpdateScrap/'+response.data[0],{
+          name:this.state.Name,
+          time:moment().format('hh:mm'),
+          stock:this.state.data
+        })
+        .then( (response) => {
+          console.log(response);
+          openNotificationWithIcon('success');
+        })
+        .catch( (error) => {
+          console.log(error);
+        });
+      }
+    })
+    .catch( (error) => {
       console.log(error);
-    });*/
+    })    
   }
 
   componentWillMount() {
     console.log('componentWillMount');
-      axios.get(baseURL+'/ShopData/getLastStock',
-        {
-          params: {
-            shop : window.localStorage.getItem('shopname'),
-            branch : window.localStorage.getItem('branch')
-          }
+    axios.get(baseURL+'/ShopData/getLastStock',
+      {
+        params: {
+          shop : window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch')
         }
-      )
-      .then( (response) =>{
+      }
+    )
+    .then( (response) =>{
       for(var index in response.data){
+        response.data[index].stock = 0;
+        response.data[index].order = 0;
         response.data[index].scrap = 0;
       }
-      this.setState({data:response.data,
-        Shop:window.localStorage.getItem('shopname'),
-        Name:window.localStorage.getItem('name'),
+      this.setState({
+        data:response.data,
         Branch:window.localStorage.getItem('branch'),
-        isAuth:window.sessionStorage.getItem('isAuth'),
-        Permission:window.sessionStorage.getItem('permission')
       });
     })
     .catch(function (error) {
@@ -210,8 +246,50 @@ class UserPage extends React.Component{
   }
   componentDidUpdate(){
     console.log('componentDidUpdate');
+    if(this.state.Update === true){
+      axios.get(baseURL+'/ShopData/getLastStock',
+        {
+          params: {
+          shop : window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch')
+        }
+      })
+      .then( (response) =>{
+        console.log(response.data)
+        if(response.data !== []){
+          for(var index in response.data){
+            response.data[index].stock = 0;
+            response.data[index].order = 0;
+            response.data[index].scrap = 0;
+          }
+          this.setState({
+            data:response.data,
+            Branch:window.localStorage.getItem('branch'),
+            Update:false
+          });
+        }else{
+          this.setState({
+            data:'',
+            Name:window.localStorage.getItem('branch'),
+            Update:false
+          });
+        }
+      })
+      .catch( (error)=>{
+        console.log(error);
+        this.setState({
+          data:'',
+          Branch:window.localStorage.getItem('branch'),
+          Update:false
+        });
+      }); 
+    }
+  }
+
+  Getdata = () =>{
+    
   }
 }
 
 
-export default UserPage;
+export default ScrapPage;

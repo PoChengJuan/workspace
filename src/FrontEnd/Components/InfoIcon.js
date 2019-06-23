@@ -1,7 +1,7 @@
 import React from 'react';
-import { Icon, Popover,Button, Avatar } from 'antd';
+import { Icon, Popover,Button, Avatar,Dropdown } from 'antd';
 import '../../App.css'
-
+import DropdownList from './DropdownLIst'
 class InfoIcon extends React.Component{
     LogoutFunction(){
         this.props.logout();
@@ -10,9 +10,11 @@ class InfoIcon extends React.Component{
         super(props);
         this.state = {
             Permission:'',
-            isAuth:this.props.isAuth
+            isAuth:this.props.isAuth,
+            withDropdown:this.props.dropdown
           }
     }
+    
     render(){
         return(
             <Popover content={
@@ -21,7 +23,23 @@ class InfoIcon extends React.Component{
                     //User
                     <div>
                       <p>姓名：{this.props.name}</p>
-                      <p>位置：{this.props.branch}</p>
+                      <p>位置：
+                        { 
+                          this.state.withDropdown == false &&
+                            this.props.branch
+                        }
+                        {
+                          this.state.withDropdown == true &&
+                          window.sessionStorage.getItem('permission') >= 7 &&
+                            <DropdownList render={false} shopchange={this.shopchange} />
+                          
+                        }{
+                          this.state.withDropdown == true &&
+                          window.sessionStorage.getItem('permission') < 7 &&
+                            this.props.branch
+                          
+                        }
+                      </p>
                       <p>權限：{this.state.Permission}</p>
                     </div>
                   }
@@ -31,6 +49,9 @@ class InfoIcon extends React.Component{
                 <Avatar className="Avatar" shape={this.props.shape} icon="user" size={this.props.size} />    
               </Popover>
         )
+    }
+    shopchange=()=>{
+      this.props.shopchange();
     }
     componentWillMount() {
         console.log("InfoIcon")

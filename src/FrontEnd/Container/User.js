@@ -7,6 +7,8 @@ import NumericInput from'../Components/InputNumber'
 import {BrowserRouter as Router,Redirect,} from "react-router-dom";
 import moment from 'moment';
 import baseURL from '../Components/AxiosAPI'
+import InfoIcom from '../Components/InfoIcon'
+
 const { Header, Content } = Layout;
 
 const openNotificationWithIcon = type => {
@@ -43,7 +45,9 @@ class UserPage extends React.Component{
       Permission:'',
       Position:'',
       Display:false,
-      MainPage:false
+      MainPage:false,
+      ScrapPage:false,
+      Update:false
     }      
   }
   LogoutFunction(){
@@ -87,14 +91,19 @@ class UserPage extends React.Component{
   MainFnction(e){
     this.setState({MainPage:true})
   }
+  ScrapFunction(e){
+    this.setState({ScrapPage:true})
+  }
   render(){
-    const { data,expense,isAuth,MainPage } = this.state;
+    const { data,expense,isAuth,MainPage,ScrapPage } = this.state;
     if(isAuth === 'false'){
       console.log('logout');
       return <Redirect to={'/'} />
     }else if(MainPage === true){
       return <Redirect to={'Main'} />
-    }    
+    }else if(ScrapPage === true){
+      return <Redirect to={'Scrap'} />
+    }
     return(
       <div className="App">
         <Row>
@@ -102,23 +111,21 @@ class UserPage extends React.Component{
             <Col span={24}>
               <Header className="Header">
                 <div>
-                  <Popover content={
-                    <div>
-                      {
-                        //User
-                        <div>
-                          <p>姓名：{this.state.Name}</p>
-                          <p>位置：{this.state.Branch}</p>
-                          <p>權限：{this.state.Position}</p>
-                        </div>
-                      }
-                      <Button className='logout' onClick={this.LogoutFunction.bind(this)}>登出<Icon type="logout" /></Button>
-                    </div>
-                  } trigger="click">
-                    <Avatar className="Avatar" shape="circle" icon="user" size={60} />    
-                  </Popover>
                   {this.state.Display &&
-                    <Icon type="line-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
+                    <Icon type="delete" className='delete' style={{fontSize:'1cm',color:'#ff0011'}} onClick={this.ScrapFunction.bind(this)} />
+                  }
+                  <InfoIcom 
+                        name={window.localStorage.getItem('name')}
+                        branch={window.localStorage.getItem('branch')}
+                        permission = {window.sessionStorage.getItem('permission')}
+                        shape='circle'
+                        size={60}
+                        dropdown = {true}
+                        shopchange = {this.DataUpdata}
+                        logout={()=>this.LogoutFunction()}
+                    />
+                  {this.state.Display &&
+                    <Icon type="bar-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
                   }
                 </div>
               </Header>
@@ -174,6 +181,13 @@ class UserPage extends React.Component{
       </div>
     )
   }
+  DataUpdata=(Update)=>{
+    this.setState({Update:true})
+  }
+  LogoutFunction(){
+    this.setState({isAuth:'false'});
+    window.sessionStorage.setItem('isAuth','false');
+  }
   UploadFunction(event){
     const{data} = this.state
     
@@ -196,9 +210,9 @@ class UserPage extends React.Component{
     })
     //this.setState({data})
     axios.post(baseURL+'/ShopData/add', {
-      shopname: this.state.Shop,
+      shopname: window.localStorage.getItem('shopname'),
       branch : this.state.Branch,
-      name:this.state.Name,
+      name:window.localStorage.getItem('name'),
       date:moment().format('YYYY-MM-DD'),
       time:moment().format('hh:mm'),
       stock:this.state.data,
@@ -207,21 +221,23 @@ class UserPage extends React.Component{
     })
     .then( (response) => {
       console.log(response);
-      this.setState({UploadDisable:true})
+      //Owner can upload multi time
+      if(window.sessionStorage.getItem('permission') < 7){
+        this.setState({UploadDisable:true})
+        //set last upload date
+        axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
+          date:moment().format('YYYY-MM-DD')
+        })
+        .then( (response) => {
+          console.log(response);
+        })
+        .catch( (error) => {
+          console.log(error);
+        });
+      }
       console.log('success')
       window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
       openNotificationWithIcon('success')
-      
-      //set last upload date
-      axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
-        date:moment().format('YYYY-MM-DD')
-      })
-      .then( (response) => {
-        console.log(response);
-      })
-      .catch( (error) => {
-        console.log(error);
-      });
     })
     .catch(function (error) {
       console.log(error);
@@ -231,39 +247,25 @@ class UserPage extends React.Component{
 
   componentWillMount() {
     console.log('componentWillMount');
-      axios.get(baseURL+'/ShopData/getLastStock',
-        {
-          params: {
-            shop : window.localStorage.getItem('shopname'),
-            branch : window.localStorage.getItem('branch')
-          }
+    axios.get(baseURL+'/ShopData/getLastStock',
+      {
+        params: {
+          shop : window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch')
         }
-      )
-      .then( (response) =>{
+      }
+    )
+    .then( (response) =>{
       for(var index in response.data){
         response.data[index].order = 0;
         response.data[index].scrap = 0;
       }
-      this.setState({data:response.data,
-        Shop:window.localStorage.getItem('shopname'),
-        Name:window.localStorage.getItem('name'),
+      this.setState({
+        data:response.data,
         Branch:window.localStorage.getItem('branch'),
         isAuth:window.sessionStorage.getItem('isAuth'),
         Permission:window.sessionStorage.getItem('permission')
       });
-      if(window.sessionStorage.getItem('permission') === '9'){
-        this.setState({Position:'開發者',
-        Display:true});
-      }else if(window.sessionStorage.getItem('permission') === '7'){
-        this.setState({Position:'老闆',
-        //Display:false
-        Display:true
-      });
-      }else if(window.sessionStorage.getItem('permission') === '5'){
-        this.setState({Position:'店長'});
-      }else{
-        this.setState({Position:'人員'});
-      }
     })
     .catch(function (error) {
       console.log(error);
@@ -285,6 +287,20 @@ class UserPage extends React.Component{
     .catch(function (error) {
       console.log(error);
     }); 
+
+    if(window.sessionStorage.getItem('permission') === '9'){
+      this.setState({Position:'開發者',
+      Display:true});
+    }else if(window.sessionStorage.getItem('permission') === '7'){
+      this.setState({Position:'老闆',
+      //Display:false
+      Display:true
+    });
+    }else if(window.sessionStorage.getItem('permission') === '5'){
+      this.setState({Position:'店長'});
+    }else{
+      this.setState({Position:'人員'});
+    }
     //console.log(window.sessionStorage.getItem('date'))
     //console.log(moment().format('MM-DD'))
     //One day only upload one time
@@ -301,7 +317,7 @@ class UserPage extends React.Component{
       ){        
         this.setState({UploadDisable:false});
       } 
-    }
+    }this.setState({UploadDisable:false});
     //if(window.sessionStorage.getItem('uploadagain') === 'true'){
     //  this.setState({UploadDisable:false});
     //}
@@ -312,6 +328,76 @@ class UserPage extends React.Component{
   }
   componentDidUpdate(){
     console.log('componentDidUpdate');
+    if(this.state.Update === true){
+      axios.get(baseURL+'/ShopData/getLastStock',
+        {
+          params: {
+            shop : window.localStorage.getItem('shopname'),
+            branch : window.localStorage.getItem('branch')
+          }
+        }
+      )
+      .then( (response) =>{
+        if(response.data !== []){
+          for(var index in response.data){
+            response.data[index].order = 0;
+            response.data[index].scrap = 0;
+          }
+          this.setState({
+            data:response.data,
+            Branch:window.localStorage.getItem('branch'),
+            UploadDisable:false
+          });
+        }else{
+          console.log('test 1')
+          this.setState({
+            data:'',
+            Branch:window.localStorage.getItem('branch'),
+          });
+        }
+      })
+      .catch( (error) => {
+        console.log(error);
+        console.log('test 2')
+
+        this.setState({
+          data:'',
+          Branch:window.localStorage.getItem('branch'),
+          UploadDisable:true
+        });
+      }); 
+      
+      axios.get(baseURL+'/ShopData/getLastExpense',
+      {
+        params: {
+          shop: window.localStorage.getItem('shopname'),
+          branch: window.localStorage.getItem('branch')
+        }
+      })
+      .then( (response) => {
+        if(response.data !== []){
+          for(var index in response.data){
+            response.data[index].cost = 0;
+          }
+          this.setState({expense:response.data});
+        }else{
+          console.log('test 3')
+
+          this.setState({
+            expense:'',
+            UploadDisable:true});
+        }
+      })
+      .catch( (error) => {
+        console.log(error);
+        console.log('test 4')
+
+        this.setState({
+          expense:'',
+          UploadDisable:true});
+      }); 
+      this.setState({Update:false})
+    }
   }
 }
 
