@@ -86,30 +86,35 @@ class MainPage extends React.Component{
   render(){
     const routes = [
       {
-        path: "/Info",
+        path: "/Main",
         exact: true,
-        main: () => <Info Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        main: () => <Info Branch={this.state.Branch} Width={1500} />
       },
       {
         path: '/StockList',
-        main: () => <StockList Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        exact: true,
+        main: () => <StockList Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       },
       {
         path: "/bubblegum",
-        main: () => <PieChartItem Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        exact: true,
+        main: () => <PieChartItem Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       },
       {
         path: "/BalanceSheet",
-        main: () => <BalanceSheet Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        exact: true,
+        main: () => <BalanceSheet Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       },
       {
         path: "/Statistics",
-        main: ()=> <Statistics Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        exact: true,
+        main: ()=> <Statistics Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       },
       {
         path: "/Achieving",
+        exact: true,
         //main: () => <BarChartItem width={1500} height={700} />
-        main: () => <Achieving Branch={this.state.Branch} Width={this.refDom.clientWidth-50} />
+        main: () => <Achieving Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       }
     ];
     const { StockPage,ScrapPage,isAuth,BranchList } = this.state;
@@ -154,44 +159,61 @@ class MainPage extends React.Component{
               </a>
             </Dropdown>
           </Header>
-          <Row>
             <Layout>
               <Router>
-                <Col xs={{span:0}} sm={{span:0}} md={{span:2}} xl={{span:2}} className="Sider">
-                  <Sider className="Sider">
+                  
+                  <Sider
+                  theme='light'
+                  className="Sider"
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                    onBreakpoint={broken => {
+                      console.log(broken);
+                    }}
+                    onCollapse={(collapsed, type) => {
+                      console.log(collapsed, type);
+                    }}
+                  >
                     <div  className="SiderItem">
-                      <ul style={{ listStyleType: "none", padding: 0 }}>
-                        <li>
-                          <Link to='/Info'>店家資訊</Link>
-                        </li>
-                        <li>
-                          <Link to='/StockList'>庫存明細</Link>
-                        </li>
-                        <li>
-                          <Link to='/BalanceSheet'>收支圖</Link>
-                        </li>
-                        <li>
-                        {this.state.Display &&
-                          <Link to='/Achieving'>達成率</Link>
-                        }
-                        </li>
-                        <li>
-                        {this.state.Display &&
-                          <Link to='/Statistics'>統計</Link>
-                        }
-                        </li>
-                        <li>
-                          <a onClick={this.StockFunction.bind(this)}>盤點</a>
-                        </li>
-                        <li>
-                           <a onClick={this.ScrapFunction.bind(this)}>報廢</a>
-                        
-                        </li>
-                      </ul>
+                      <Menu style={{ background: '#ccedfc', padding: 0 }} theme="light" mode="inline" defaultSelectedKeys={['1']}>
+                        <Menu.Item key="1">
+                          <Icon type="shop" />
+                          <span className="nav-text">店家資訊</span>
+                          <Link to='/Main'></Link>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                          <Icon type="stock" />
+                          <span className="nav-text">庫存明細</span>
+                          <Link to='/StockList' />
+                        </Menu.Item>
+                        <Menu.Item key="3">
+                          <Icon type="money-collect" />
+                          <span className="nav-text">收支圖</span>
+                          <Link to='/BalanceSheet' />
+                        </Menu.Item>
+                        <Menu.Item key="4">
+                          <Icon type="bar-chart" />
+                          <span className="nav-text">達成率</span>
+                          <Link to='/Achieving' />
+                        </Menu.Item>
+                        <Menu.Item key="5">
+                          <Icon type="profile" />
+                          <span className="nav-text">統計</span>
+                          <Link to='/Statistics' />
+                        </Menu.Item>
+                        <Menu.Item key="6">
+                          <Icon type="unordered-list" />
+                          <span className="nav-text">盤點</span>
+                          <a onClick={this.StockFunction.bind(this)}></a>
+                        </Menu.Item>
+                        <Menu.Item key="7">
+                          <Icon type="delete" />
+                          <span className="nav-text">報廢</span>
+                          <a onClick={this.ScrapFunction.bind(this)}></a>
+                        </Menu.Item>
+                      </Menu>
                     </div>
                   </Sider>
-                </Col>
-                <Col xs={{span:24}} sm={{span:24}} md={{span:22}} xl={{span:22}}>
                   <Content className="Content">
                     <div style={{ display: "flex",width: "100%",height: "100%" }}>
                       <div ref={this.saveRef} style={{ flex: 1, padding: "10px", width: "0%" }}>
@@ -208,10 +230,8 @@ class MainPage extends React.Component{
                       </div>
                     </div>
                   </Content>
-                </Col>
               </Router>
             </Layout>
-          </Row>
           <Footer className="Footer">Information</Footer>
         </Layout>
         

@@ -61,7 +61,7 @@ class StockList extends React.Component{
       startDate:moment().add('day',-7).format('YYYY-MM-DD'),
       endDate:moment().format('YYYY-MM-DD'),
       chartWidth:this.props.Width,
-      chartHeight:500,
+      chartHeight:250,
       selecter1:'',
       selecter2:'',
       selecter3:'',
@@ -183,6 +183,65 @@ class StockList extends React.Component{
             )
         }
       </Select>
+      <h3>庫存</h3>
+      <LineChart
+        width={this.state.chartWidth}
+        height={this.state.chartHeight}
+        data={this.state.data}
+        //data={data}
+        margin={{
+          top: 20, right: 30, left: 20, bottom: 10,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="Date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey={this.state.selecter1} stroke = '#ff0000' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter2}  stroke = '#00ff00' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter3}  stroke = '#0000FF' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
+
+      </LineChart>
+      <Table 
+        //columns={columns} 
+        columns={columns}
+        dataSource={data} 
+        bordered = {true}
+        size = 'small'
+        pagination={false}
+        onChange={this.handleChange} />
+      <h3>銷售量</h3>
+      <LineChart
+        width={this.state.chartWidth}
+        height={this.state.chartHeight}
+        data={this.state.data}
+        //data={data}
+        margin={{
+          top: 20, right: 30, left: 20, bottom: 10,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="Date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey={this.state.selecter1} stroke = '#ff0000' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter2}  stroke = '#00ff00' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter3}  stroke = '#0000FF' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
+
+      </LineChart>
+      <Table 
+        //columns={columns} 
+        columns={columns}
+        dataSource={data} 
+        bordered = {true}
+        size = 'small'
+        pagination={false}
+        onChange={this.handleChange} />
+      <h3>報廢</h3>
       <LineChart
         width={this.state.chartWidth}
         height={this.state.chartHeight}
@@ -327,7 +386,7 @@ class StockList extends React.Component{
     console.log('componentWillUpdate')
   }
   updateDimensions = (e) => { 
-    console.log("AreaChart updateDimensions");
+    console.log("StockList updateDimensions");
     const {clientWidth, clientHeight} = this.refDom;
     console.log('====================================');
     console.log(clientWidth, clientHeight, this.refDom);

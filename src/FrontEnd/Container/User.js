@@ -112,7 +112,7 @@ class UserPage extends React.Component{
               <Header className="Header">
                 <div>
                   {this.state.Display &&
-                    <Icon type="delete" className='delete' style={{fontSize:'1cm',color:'#ff0011'}} onClick={this.ScrapFunction.bind(this)} />
+                    <Icon type="delete" theme="filled" className='delete' style={{fontSize:'1cm',color:'#ff0011'}} onClick={this.ScrapFunction.bind(this)} />
                   }
                   <InfoIcom 
                         name={window.localStorage.getItem('name')}
@@ -194,54 +194,70 @@ class UserPage extends React.Component{
     axios.get(baseURL+'/ShopData/getTodayData',
     {
       params: {
-        shopname: this.state.Shop,
-        branch: this.state.Branch,
+        shopname: window.localStorage.getItem('shopname'),
+        branch: window.localStorage.getItem('branch'),
         today: moment().format('YYYY-MM-DD')
       }
     })
     .then( (response) =>{
       console.log(response.data);
       if(response.data.length === 0){
-      }else{
-      }
-    })
-    .catch( (error) => {
-      console.log(error);
-    })
-    //this.setState({data})
-    axios.post(baseURL+'/ShopData/add', {
-      shopname: window.localStorage.getItem('shopname'),
-      branch : this.state.Branch,
-      name:window.localStorage.getItem('name'),
-      date:moment().format('YYYY-MM-DD'),
-      time:moment().format('hh:mm'),
-      stock:this.state.data,
-      expense:this.state.expense,
-      income:this.state.Income
-    })
-    .then( (response) => {
-      console.log(response);
-      //Owner can upload multi time
-      if(window.sessionStorage.getItem('permission') < 7){
-        this.setState({UploadDisable:true})
-        //set last upload date
-        axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
-          date:moment().format('YYYY-MM-DD')
+        /*****No Data (Post)********************/
+        axios.post(baseURL+'/ShopData/add', {
+          shopname: window.localStorage.getItem('shopname'),
+          branch : window.localStorage.getItem('branch'),
+          name:window.localStorage.getItem('name'),
+          date:moment().format('YYYY-MM-DD'),
+          time:moment().format('hh:mm'),
+          stock:this.state.data,
+          expense:this.state.expense,
+          income:this.state.Income
         })
         .then( (response) => {
           console.log(response);
+          //Owner can upload multi time
+          if(window.sessionStorage.getItem('permission') < 7){
+            this.setState({UploadDisable:true})
+            //set last upload date
+            axios.put(baseURL+'/User/updateUploaddate/'+window.sessionStorage.getItem('auto_increment'),{
+              date:moment().format('YYYY-MM-DD')
+            })
+            .then( (response) => {
+              console.log(response);
+            })
+            .catch( (error) => {
+              console.log(error);
+            });
+          }
+          console.log('success')
+          window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
+          openNotificationWithIcon('success')
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }else{
+        /*****Update Data (Put)******************/
+        axios.put(baseURL+'/ShopData/UpdateStock/'+response.data[0],{
+          name:window.localStorage.getItem('name'),
+          time:moment().format('hh:mm'),
+          stock:this.state.data,
+          expense:this.state.expense,
+          income:this.state.Income
+        })
+        .then( (response) => {
+          console.log(response);
+          openNotificationWithIcon('success');
         })
         .catch( (error) => {
           console.log(error);
         });
       }
-      console.log('success')
-      window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
-      openNotificationWithIcon('success')
     })
-    .catch(function (error) {
+    .catch( (error) => {
       console.log(error);
-    });
+    })
+    
     
   }
 

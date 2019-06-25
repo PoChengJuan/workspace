@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker, Typography,Table } from 'antd';
+import { DatePicker,Table } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import moment from 'moment';

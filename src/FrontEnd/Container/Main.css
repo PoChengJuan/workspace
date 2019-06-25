@@ -12,6 +12,10 @@
 .User{
     align-self: right;
 }
+.MainPage .Content{
+    padding-left: 1cm;
+    padding-right: 1cm;
+}
 .CSILOGO{
     width: auto;
     height: 1.5cm;
@@ -27,14 +31,8 @@ ul{
 
 .SiderItem{
     margin-top: 1.5cm;
-    margin-right: 0%;
 }
-.Sider ul li{
-    margin-top: 10%;
-    margin-bottom: 10%;
-    padding-left: 0.5cm;
-    text-align: left;
-}
+
 .Header{
     padding-left: 1%;
     padding-right: 1%;

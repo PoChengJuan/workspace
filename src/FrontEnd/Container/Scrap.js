@@ -89,7 +89,7 @@ class ScrapPage extends React.Component{
                         shopchange = {this.DataUpdata}
                         logout={()=>this.LogoutFunction()}
                     />
-                    <Icon type="line-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
+                    <Icon type="bar-chart" className='analyze' style={{fontSize:'1cm',color:'#08c'}} onClick={this.MainFnction.bind(this)} />
                 </div>
               </Header>
             </Col>
@@ -147,7 +147,7 @@ class ScrapPage extends React.Component{
     axios.get(baseURL+'/ShopData/getTodayData',
     {
       params: {
-        shopname: this.state.Shop,
+        shopname: window.localStorage.getItem('shopname'),
         branch: window.localStorage.getItem('branch'),
         today: moment().format('YYYY-MM-DD')
       }
@@ -156,11 +156,10 @@ class ScrapPage extends React.Component{
       console.log(response.data);
       if(response.data.length === 0){
         // No Data
-        console.log("false")
         axios.post(baseURL+'/ShopData/add', {
-          shopname: this.state.Shop,
+          shopname: window.localStorage.getItem('shopname'),
           branch : window.localStorage.getItem('branch'),
-          name:this.state.Name,
+          name:window.localStorage.getItem('name'),
           date:moment().format('YYYY-MM-DD'),
           time:moment().format('hh:mm'),
           stock:this.state.data,
@@ -169,6 +168,7 @@ class ScrapPage extends React.Component{
         })
         .then( (response) => {
           console.log(response);
+          openNotificationWithIcon('success');
           //window.sessionStorage.setItem('lastupload',moment().format('YYYY-MM-DD'));
         })
         .catch(function (error) {
@@ -176,12 +176,12 @@ class ScrapPage extends React.Component{
         });
       }else{
         // Updata
-        console.log(this.state.Name)
-        console.log(moment().format('hh:mm'))
-        console.log(this.state.data)
+        //console.log(this.state.Name)
+        //console.log(moment().format('hh:mm'))
+        //console.log(this.state.data)
 
         axios.put(baseURL+'/ShopData/UpdateScrap/'+response.data[0],{
-          name:this.state.Name,
+          name:window.localStorage.getItem('name'),
           time:moment().format('hh:mm'),
           stock:this.state.data
         })
