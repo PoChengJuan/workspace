@@ -1,6 +1,6 @@
 import React from 'react';
 import './User.css'
-import { Row, Col, Layout, Button, Input } from 'antd';
+import { Table, columns, Layout, Button, Input } from 'antd';
 import { List, Icon, Popover, Avatar, InputNumber } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
@@ -64,6 +64,14 @@ const defaultData = [
               </List.Item>
             )
           }
+          <Table 
+        //columns={columns} 
+       // columns={columns}
+        dataSource={data} 
+        bordered = {true}
+        size = 'small'
+        pagination={false}
+        onChange={this.handleChange} />
         </React.Fragment>
       );
     }

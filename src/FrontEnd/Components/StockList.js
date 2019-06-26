@@ -56,7 +56,10 @@ class StockList extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      data:'',
+      stock:[],
+      sold:[],
+      scrap:[],
+      order:[],
       itemList:itemListData,
       startDate:moment().add('day',-7).format('YYYY-MM-DD'),
       endDate:moment().format('YYYY-MM-DD'),
@@ -149,7 +152,7 @@ class StockList extends React.Component{
       },
     ];
   return (
-    <div ref={this.saveRef}>
+    <div className='StockList' ref={this.saveRef}>
       <RangePicker
         defaultValue={[moment(this.state.startDate, dateFormat), moment(this.state.endDate, dateFormat)]}
         format={dateFormat}
@@ -183,40 +186,11 @@ class StockList extends React.Component{
             )
         }
       </Select>
-      <h3>庫存</h3>
-      <LineChart
-        width={this.state.chartWidth}
-        height={this.state.chartHeight}
-        data={this.state.data}
-        //data={data}
-        margin={{
-          top: 20, right: 30, left: 20, bottom: 10,
-        }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="Date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey={this.state.selecter1} stroke = '#ff0000' label={<CustomizedLabel />} />
-        <Line type="monotone" dataKey={this.state.selecter2}  stroke = '#00ff00' label={<CustomizedLabel />} />
-        <Line type="monotone" dataKey={this.state.selecter3}  stroke = '#0000FF' label={<CustomizedLabel />} />
-        <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
-
-      </LineChart>
-      <Table 
-        //columns={columns} 
-        columns={columns}
-        dataSource={data} 
-        bordered = {true}
-        size = 'small'
-        pagination={false}
-        onChange={this.handleChange} />
       <h3>銷售量</h3>
       <LineChart
         width={this.state.chartWidth}
         height={this.state.chartHeight}
-        data={this.state.data}
+        data={this.state.sold}
         //data={data}
         margin={{
           top: 20, right: 30, left: 20, bottom: 10,
@@ -233,19 +207,34 @@ class StockList extends React.Component{
         <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
 
       </LineChart>
-      <Table 
-        //columns={columns} 
-        columns={columns}
-        dataSource={data} 
-        bordered = {true}
-        size = 'small'
-        pagination={false}
-        onChange={this.handleChange} />
+      
+      <h3>庫存</h3>
+      <LineChart
+        width={this.state.chartWidth}
+        height={this.state.chartHeight}
+        data={this.state.stock}
+        //data={data}
+        margin={{
+          top: 20, right: 30, left: 20, bottom: 10,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="Date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey={this.state.selecter1} stroke = '#ff0000' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter2}  stroke = '#00ff00' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter3}  stroke = '#0000FF' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
+
+      </LineChart>
+
       <h3>報廢</h3>
       <LineChart
         width={this.state.chartWidth}
         height={this.state.chartHeight}
-        data={this.state.data}
+        data={this.state.scrap}
         //data={data}
         margin={{
           top: 20, right: 30, left: 20, bottom: 10,
@@ -262,15 +251,27 @@ class StockList extends React.Component{
         <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
 
       </LineChart>
+      <h3>進貨</h3>
+      <LineChart
+        width={this.state.chartWidth}
+        height={this.state.chartHeight}
+        data={this.state.order}
+        //data={data}
+        margin={{
+          top: 20, right: 30, left: 20, bottom: 10,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="Date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey={this.state.selecter1} stroke = '#ff0000' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter2}  stroke = '#00ff00' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter3}  stroke = '#0000FF' label={<CustomizedLabel />} />
+        <Line type="monotone" dataKey={this.state.selecter4} troke = '#0066FF' label={<CustomizedLabel />} />
 
-      <Table 
-        //columns={columns} 
-        columns={columns}
-        dataSource={data} 
-        bordered = {true}
-        size = 'small'
-        pagination={false}
-        onChange={this.handleChange} />
+      </LineChart>
       </div>
     )    
   }
@@ -286,7 +287,7 @@ class StockList extends React.Component{
     }else if(key === 4){
       this.setState({selecter4:value});
     }
-    this.setState({data:this.state.data})
+    //this.setState({stock:this.state.stock})
   }
     handleChange = (pagination, filters, sorter) => {
         console.log('Various parameters', pagination, filters, sorter);
@@ -300,7 +301,7 @@ class StockList extends React.Component{
     DatePickerFunction(dates, dateStrings) {
       window.localStorage.setItem("StockListPageDate_Start",dateStrings[0])
       window.localStorage.setItem("StockListPageDate_End",dateStrings[1])
-        axios.get(baseURL+'/ShopData/getRangeStock',
+        axios.get(baseURL+'/ShopData/getRangeData',
           {
             params: {
               shopname : window.localStorage.getItem('shopname'),
@@ -311,8 +312,12 @@ class StockList extends React.Component{
           }
         )
         .then( (response) =>{
-          this.setState({data:response.data})
-          console.log(this.state.data)
+          console.log(response.data)
+          this.setState({stock:response.data[0]})
+          this.setState({scrap:response.data[1]})
+          this.setState({sold:response.data[2]})
+          this.setState({order:response.data[3]})
+          console.log(this.state.stock)
         })
         .catch(function (error) {
           console.log(error);
@@ -339,7 +344,7 @@ class StockList extends React.Component{
     }); 
     console.log(Start+"和"+End)
     if(Start === null || End === null){
-      axios.get(baseURL+'/ShopData/getRangeStock',
+      axios.get(baseURL+'/ShopData/getRangeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),
@@ -349,14 +354,17 @@ class StockList extends React.Component{
         }
       })
       .then( (response) =>{
-        this.setState({data:response.data})
-        console.log(this.state.data)
+        this.setState({stock:response.data[0]})
+        this.setState({scrap:response.data[1]})
+        this.setState({sold:response.data[2]})
+        this.setState({order:response.data[3]})
+        console.log(this.state.stock)
       })
       .catch(function (error) {
         console.log(error);
       }); 
     }else{
-      axios.get(baseURL+'/ShopData/getRangeStock',
+      axios.get(baseURL+'/ShopData/getRangeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),
@@ -366,8 +374,16 @@ class StockList extends React.Component{
         }
       })
       .then( (response) =>{
-        this.setState({data:response.data})  
-        console.log(this.state.data)
+        console.log(response.data[0])
+        console.log(response.data[1])
+
+        this.setState({stock:response.data[0]})
+        this.setState({scrap:response.data[1]})
+        this.setState({sold:response.data[2]})
+        this.setState({order:response.data[3]})
+        console.log(this.state.stock)
+        console.log(this.state.scrap)
+
       })
       .catch(function (error) {
         console.log(error);

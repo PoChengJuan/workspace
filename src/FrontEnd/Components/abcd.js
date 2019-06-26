@@ -92,7 +92,7 @@ class Abc extends PureComponent {
     window.addEventListener("resize", this.updateDimensions);
 
     console.log('componentWillMount');
-    axios.get(baseURL+'/ShopData/getRangeData',
+    axios.get(baseURL+'/ShopData/getIncomeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),
@@ -119,7 +119,7 @@ class Abc extends PureComponent {
     console.log('componentWillUpdate');
   }
   DatePickerFunction(dates, dateStrings) {
-    axios.get(baseURL+'/ShopData/getRangeData',
+    axios.get(baseURL+'/ShopData/getIncomeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),

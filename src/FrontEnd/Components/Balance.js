@@ -147,7 +147,7 @@ class BalanceSheet extends React.Component{
     window.localStorage.setItem("BalancePageDate_Start",dateStrings[0])
     window.localStorage.setItem("BalancePageDate_End",dateStrings[1])
 
-    axios.get(baseURL+'/ShopData/getRangeData',
+    axios.get(baseURL+'/ShopData/getIncomeData',
       {
         params: {
           shopname : window.localStorage.getItem('shopname'),
@@ -173,7 +173,7 @@ class BalanceSheet extends React.Component{
 
     console.log(Start+"和"+End)
       if(Start === null || End === null){
-        axios.get(baseURL+'/ShopData/getRangeData',
+        axios.get(baseURL+'/ShopData/getIncomeData',
           {
             params: {
               shopname : window.localStorage.getItem('shopname'),
@@ -195,7 +195,7 @@ class BalanceSheet extends React.Component{
           console.log(error);
         }); 
       }else{
-        axios.get(baseURL+'/ShopData/getRangeData',
+        axios.get(baseURL+'/ShopData/getIncomeData',
           {
             params: {
               shopname : window.localStorage.getItem('shopname'),
