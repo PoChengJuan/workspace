@@ -1,20 +1,14 @@
 import React from 'react';
-import Button from 'antd/lib/button';
-import { Input } from 'antd';
-import { Typography, Layout, Row, Col } from 'antd';
+import {Layout, Row, Col } from 'antd';
 import CSILogo from '../png/Logo.png';
 import '../../App.css'
 import './Login.css'
 import axios from 'axios'
 import md5 from 'md5'
-import {
-  BrowserRouter as Router,
-  Redirect,
-} from "react-router-dom";
-import moment from 'moment';
+import {Redirect} from "react-router-dom";
 import baseURL from '../Components/AxiosAPI'
 import LoginForm from '../Components/LoginForm'
-const { Title } = Typography;
+//const { Title } = Typography;
 const {
   Header, Content,
 } = Layout;

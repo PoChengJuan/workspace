@@ -1,10 +1,10 @@
 import React from 'react';
 import './User.css'
 import { Row, Col, Layout, Button } from 'antd';
-import { List, Icon, Popover, Avatar, InputNumber,notification } from 'antd';
+import { List, Icon, InputNumber,notification } from 'antd';
 import axios from 'axios'
 import NumericInput from'../Components/InputNumber'
-import {BrowserRouter as Router,Redirect,} from "react-router-dom";
+import {Redirect,} from "react-router-dom";
 import moment from 'moment';
 import baseURL from '../Components/AxiosAPI'
 import InfoIcom from '../Components/InfoIcon'
@@ -49,10 +49,6 @@ class UserPage extends React.Component{
       ScrapPage:false,
       Update:false
     }      
-  }
-  LogoutFunction(){
-    this.setState({isAuth:'false'});
-    window.sessionStorage.setItem('isAuth','false');
   }
   StockValueStore  = (item ,Num) => {
     const {data} = this.state;
@@ -188,9 +184,7 @@ class UserPage extends React.Component{
     this.setState({isAuth:'false'});
     window.sessionStorage.setItem('isAuth','false');
   }
-  UploadFunction(event){
-    const{data} = this.state
-    
+  UploadFunction(event){    
     axios.get(baseURL+'/ShopData/getTodayData',
     {
       params: {

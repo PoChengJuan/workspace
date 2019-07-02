@@ -1,7 +1,8 @@
 import React from 'react';
 import { Input } from 'antd';
 import './InputNumber.css'
-function formatNumber(value) {
+
+/*function formatNumber(value) {
   value += '';
   const list = value.split('.');
   const prefix = list[0].charAt(0) === '-' ? '-' : '';
@@ -15,7 +16,7 @@ function formatNumber(value) {
     result = num + result;
   }
   return `${prefix}${result}${list[1] ? `.${list[1]}` : ''}`;
-}
+}*/
 
 class NumericInput extends React.Component {
   onChange = e => {

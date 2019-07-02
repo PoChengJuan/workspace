@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button, DatePicker,Select } from 'antd';
+import { DatePicker,Select } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import moment from 'moment';
@@ -17,32 +17,7 @@ const itemListData = [
     title:'item1'
   }
 ]
-const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      item1: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      item1: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      item1: 32,
-      address: 'Sidney No. 1 Lake Park',
-    },
-    {
-      key: '4',
-      name: 'Jim Red',
-      item1: 32,
-      address: 'London No. 2 Lake Park',
-    },
-  ];
+
 class CustomizedLabel extends React.Component {
   render() {
     const {
@@ -75,10 +50,10 @@ class StockList extends React.Component{
   }
 
   render() {
-    let { sortedInfo, filteredInfo } = this.state;
-      sortedInfo = sortedInfo || {};
-      filteredInfo = filteredInfo || {};
-      const columns = [
+    //let { sortedInfo, filteredInfo } = this.state;
+      //sortedInfo = sortedInfo || {};
+      //filteredInfo = filteredInfo || {};
+      /*const columns = [
       {
         title: '日期',
         dataIndex: 'name',
@@ -92,65 +67,65 @@ class StockList extends React.Component{
         {
           title: '庫存品項',
           children:[
-          {
-            title: '單品豆',
-            dataIndex: 'item1',
-            key: 'item1',
-            sorter: (a, b) => a.item1 - b.item1,
-            sortOrder: sortedInfo.columnKey === 'item1' && sortedInfo.order,
-          },
-          {
-            title: '義式豆',
-            dataIndex: 'item2',
-            key: 'item2',
-            sorter: (a, b) => a.item2 - b.item2,
-            sortOrder: sortedInfo.columnKey === 'item2' && sortedInfo.order,
-          },
-          {
-            title: '單品豆',
-            dataIndex: 'item3',
-            key: 'item3',
-            sorter: (a, b) => a.item3 - b.item3,
-            sortOrder: sortedInfo.columnKey === 'item3' && sortedInfo.order,
-          },
-          {
-            title: '義式豆',
-            dataIndex: 'item4',
-            key: 'item4',
-            sorter: (a, b) => a.item4 - b.item4,
-            sortOrder: sortedInfo.columnKey === 'item4' && sortedInfo.order,
-          },
-          {
-            title: '單品豆',
-            dataIndex: 'item5',
-            key: 'item5',
-            sorter: (a, b) => a.item5 - b.item5,
-            sortOrder: sortedInfo.columnKey === 'item5' && sortedInfo.order,
-          },
-          {
-            title: '義式豆',
-            dataIndex: 'item6',
-            key: 'item6',
-            sorter: (a, b) => a.item6 - b.item6,
-            sortOrder: sortedInfo.columnKey === 'item6' && sortedInfo.order,
-          },
-          {
-            title: '單品豆',
-            dataIndex: 'item7',
-            key: 'item7',
-            sorter: (a, b) => a.item7 - b.item7,
-            sortOrder: sortedInfo.columnKey === 'item7' && sortedInfo.order,
-          },
-          {
-            title: '義式豆',
-            dataIndex: 'item8',
-            key: 'item8',
-            sorter: (a, b) => a.age - b.age,
-            sortOrder: sortedInfo.columnKey === 'item8' && sortedInfo.order,
-          },
-        ]
-      },
-    ];
+            {
+              title: '單品豆',
+              dataIndex: 'item1',
+              key: 'item1',
+              sorter: (a, b) => a.item1 - b.item1,
+              sortOrder: sortedInfo.columnKey === 'item1' && sortedInfo.order,
+            },
+            {
+              title: '義式豆',
+              dataIndex: 'item2',
+              key: 'item2',
+              sorter: (a, b) => a.item2 - b.item2,
+              sortOrder: sortedInfo.columnKey === 'item2' && sortedInfo.order,
+            },
+            {
+              title: '單品豆',
+              dataIndex: 'item3',
+              key: 'item3',
+              sorter: (a, b) => a.item3 - b.item3,
+              sortOrder: sortedInfo.columnKey === 'item3' && sortedInfo.order,
+            },
+            {
+              title: '義式豆',
+              dataIndex: 'item4',
+              key: 'item4',
+              sorter: (a, b) => a.item4 - b.item4,
+              sortOrder: sortedInfo.columnKey === 'item4' && sortedInfo.order,
+            },
+            {
+              title: '單品豆',
+              dataIndex: 'item5',
+              key: 'item5',
+              sorter: (a, b) => a.item5 - b.item5,
+              sortOrder: sortedInfo.columnKey === 'item5' && sortedInfo.order,
+            },
+            {
+              title: '義式豆',
+              dataIndex: 'item6',
+              key: 'item6',
+              sorter: (a, b) => a.item6 - b.item6,
+              sortOrder: sortedInfo.columnKey === 'item6' && sortedInfo.order,
+            },
+            {
+              title: '單品豆',
+              dataIndex: 'item7',
+              key: 'item7',
+              sorter: (a, b) => a.item7 - b.item7,
+              sortOrder: sortedInfo.columnKey === 'item7' && sortedInfo.order,
+            },
+            {
+              title: '義式豆',
+              dataIndex: 'item8',
+              key: 'item8',
+              sorter: (a, b) => a.age - b.age,
+              sortOrder: sortedInfo.columnKey === 'item8' && sortedInfo.order,
+            },
+          ]
+        },
+      ];*/
   return (
     <div className='StockList' ref={this.saveRef}>
       <RangePicker
@@ -161,28 +136,28 @@ class StockList extends React.Component{
       <Select defaultValue="-" style={{ width: 180 }} onChange={(e)=>this.ItemSelect(e,1)}>
         {
           this.state.itemList.map(item =>
-            <Option value={item.title}>{item.title}</Option>
+            <Option key={item.key} value={item.title}>{item.title}</Option>
             )
         }
       </Select>
       <Select defaultValue="-" style={{ width: 180 }} onChange={(e)=>this.ItemSelect(e,2)}>
         {
           this.state.itemList.map(item =>
-            <Option value={item.title}>{item.title}</Option>
+            <Option key={item.key} value={item.title}>{item.title}</Option>
             )
         }
       </Select>
       <Select defaultValue="-" style={{ width: 180 }} onChange={(e)=>this.ItemSelect(e,3)}>
         {
           this.state.itemList.map(item =>
-            <Option value={item.title}>{item.title}</Option>
+            <Option key={item.key} value={item.title}>{item.title}</Option>
             )
         }
       </Select>
       <Select defaultValue="-" style={{ width: 180 }} onChange={(e)=>this.ItemSelect(e,4)}>
         {
           this.state.itemList.map(item =>
-            <Option value={item.title}>{item.title}</Option>
+            <Option key={item.key} value={item.title}>{item.title}</Option>
             )
         }
       </Select>
@@ -337,7 +312,7 @@ class StockList extends React.Component{
     })
     .then( (response) =>{
       this.setState({itemList:response.data})
-      console.log(this.state.itemList)
+      //console.log(this.state.itemList)
     })
     .catch(function (error) {
       console.log(error);
@@ -354,11 +329,12 @@ class StockList extends React.Component{
         }
       })
       .then( (response) =>{
-        this.setState({stock:response.data[0]})
-        this.setState({scrap:response.data[1]})
-        this.setState({sold:response.data[2]})
-        this.setState({order:response.data[3]})
-        console.log(this.state.stock)
+        this.setState({
+          stock:response.data[0],
+          scrap:response.data[1],
+          sold:response.data[2],
+          order:response.data[3]
+        })
       })
       .catch(function (error) {
         console.log(error);
@@ -374,16 +350,12 @@ class StockList extends React.Component{
         }
       })
       .then( (response) =>{
-        console.log(response.data[0])
-        console.log(response.data[1])
-
-        this.setState({stock:response.data[0]})
-        this.setState({scrap:response.data[1]})
-        this.setState({sold:response.data[2]})
-        this.setState({order:response.data[3]})
-        console.log(this.state.stock)
-        console.log(this.state.scrap)
-
+        this.setState({
+          stock:response.data[0],
+          scrap:response.data[1],
+          sold:response.data[2],
+          order:response.data[3]
+        })
       })
       .catch(function (error) {
         console.log(error);

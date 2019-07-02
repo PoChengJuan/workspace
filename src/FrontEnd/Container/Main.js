@@ -1,22 +1,18 @@
 import React from 'react';
-import { Menu, Dropdown, Icon, Popover,Button, Avatar, Layout,Row,Col } from 'antd';
+import { Menu, Dropdown, Icon, Layout,Drawer } from 'antd';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import '../../App.css'
 import './Main.css'
 import CSILogo from '../png/Logo.png' 
 import BalanceSheet from '../Components/Balance.js';
-import PieChartItem from '../Components/PieChart.js'
 import Info from '../Components/Info.js';
-import BarChartItem from '../Components/BarChart.js'
 import InfoIcom from'../Components/InfoIcon.js'
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
-import MenuItem from 'antd/lib/menu/MenuItem';
 import StockList from '../Components/StockList.js'
-import Abc from '../Components/abcd.js'
 import Achieving from '../Components/Achieving.js'
 import Statistics from '../Components/Statistics.js'
-import DropdownList from '../Components/DropdownLIst.js'
+import Warning from '../Components/Warning.js'
 const {
   Header, Footer, Sider, Content,
 } = Layout;
@@ -28,33 +24,6 @@ const BranchData = [
     shopname:'xxx'
   }
 ]
-const ShopList = (
-  
-  <Menu>
-    <Menu.Item key="99" selectable>
-      康樂總店
-    </Menu.Item>
-    <Menu.Item key="1">
-      大埔店
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="2">
-      麻豆店
-    </Menu.Item>
-  </Menu>
-);
-const branch =(
-  <Menu></Menu>
-);
-const content = (
-  <div>
-    <p>姓名：</p>
-    <p>類型：開發者</p>
-    <Button>登出<Icon type="logout" /></Button>
-    
-  </div>
-);
-
 class MainPage extends React.Component{
   
   constructor(props){
@@ -65,7 +34,8 @@ class MainPage extends React.Component{
       StockPage: false,
       ScrapPage: false,
       isAuth:'',
-      Display:''}
+      Display:'',
+      visible:false}
       this.saveRef = ref => {this.refDom = ref};
   }
   ShopChangeHandle = e => {
@@ -88,17 +58,12 @@ class MainPage extends React.Component{
       {
         path: "/Main",
         exact: true,
-        main: () => <Info Branch={this.state.Branch} Width={1500} />
+        main: () => <Info Branch={this.state.Branch} Width={1500} showDrawer={this.showDrawer} />
       },
       {
         path: '/StockList',
         exact: true,
         main: () => <StockList Branch={this.state.Branch} Width={this.refDom.clientWidth} />
-      },
-      {
-        path: "/bubblegum",
-        exact: true,
-        main: () => <PieChartItem Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       },
       {
         path: "/BalanceSheet",
@@ -113,11 +78,10 @@ class MainPage extends React.Component{
       {
         path: "/Achieving",
         exact: true,
-        //main: () => <BarChartItem width={1500} height={700} />
         main: () => <Achieving Branch={this.state.Branch} Width={this.refDom.clientWidth} />
       }
     ];
-    const { StockPage,ScrapPage,isAuth,BranchList } = this.state;
+    const { StockPage,ScrapPage,BranchList } = this.state;
     if(window.sessionStorage.getItem('isAuth') === 'false'){
       return <Redirect to={'/'} />
     }
@@ -154,9 +118,9 @@ class MainPage extends React.Component{
                 } 
               trigger={['click']}
               >
-              <a className="ant-dropdown-link" >
+              <span className="ant-dropdown-link" style={{color:'#1E90FF'}} >
                 {this.state.Branch} <Icon type="down" />
-              </a>
+              </span>
             </Dropdown>
           </Header>
             <Layout>
@@ -201,15 +165,13 @@ class MainPage extends React.Component{
                           <span className="nav-text">統計</span>
                           <Link to='/Statistics' />
                         </Menu.Item>
-                        <Menu.Item key="6">
+                        <Menu.Item key="6" onClick={this.StockFunction.bind(this)}>
                           <Icon type="unordered-list" />
                           <span className="nav-text">盤點</span>
-                          <a onClick={this.StockFunction.bind(this)}></a>
                         </Menu.Item>
-                        <Menu.Item key="7">
+                        <Menu.Item key="7" onClick={this.ScrapFunction.bind(this)}>
                           <Icon type="delete" />
                           <span className="nav-text">報廢</span>
-                          <a onClick={this.ScrapFunction.bind(this)}></a>
                         </Menu.Item>
                       </Menu>
                     </div>
@@ -230,14 +192,35 @@ class MainPage extends React.Component{
                       </div>
                     </div>
                   </Content>
-              </Router>
+              </Router>  
+              
             </Layout>
-          <Footer className="Footer">Information</Footer>
+            <Footer className="Footer"><Warning /></Footer>
         </Layout>
+        <Drawer
+          title="Warning"
+          placement="right"
+          closable={false}
+          onClose={this.onClose}
+          visible={this.state.visible}
+          >
+          <Warning />
+        </Drawer>
         
       </div>
     )
   }
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
   componentWillMount() {
     console.log('componentWillMount')
     console.log(window.localStorage.getItem('shopname'))

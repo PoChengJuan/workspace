@@ -1,5 +1,5 @@
 import React from 'react';
-import { DatePicker,Table } from 'antd';
+import { DatePicker,Table,Button } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import moment from 'moment';
@@ -13,7 +13,7 @@ const stock_columns = [
     title: '品項',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '庫存',
@@ -33,7 +33,7 @@ const expense_columns = [
     title: '項目',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '金額',
@@ -47,7 +47,7 @@ const income_columns = [
     title: '',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '金額',
@@ -66,18 +66,23 @@ class Info extends React.Component{
           income:datedefault,
           lastUploadDate:testDate,
           stockTableData:'',
-          date:''
+          date:'',
+          warning:false
         }      
       }
     render(){
-      const{data,expense,stockTableData}=this.state
+      const{data,expense}=this.state
         return(
-            <div >
+            <div className='Info'>
                 <DatePicker
                   defaultValue={moment(this.state.date, dateFormat)} 
                   format={dateFormat} 
                   onChange={this.DatePickerFunction.bind(this)}
                   />
+                  {
+                    this.state.warning &&
+                    <Button className='WarningBtn' type='danger' ghost onClick={this.onClick}>警告</Button>
+                  }
                 <h2>{
                   //this.state.lastUploadDate
                   }</h2>
@@ -90,6 +95,9 @@ class Info extends React.Component{
             </div>
               
         )
+    }
+    onClick = () =>{
+      this.props.showDrawer();
     }
     DatePickerFunction(dates, dateStrings) {
       console.log(dateStrings)

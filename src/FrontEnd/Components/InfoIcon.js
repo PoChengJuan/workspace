@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Popover,Button, Avatar,Dropdown } from 'antd';
+import { Icon, Popover,Button, Avatar } from 'antd';
 import '../../App.css'
 import DropdownList from './DropdownLIst'
 class InfoIcon extends React.Component{
@@ -25,16 +25,16 @@ class InfoIcon extends React.Component{
                       <p>姓名：{this.props.name}</p>
                       <p>位置：
                         { 
-                          this.state.withDropdown == false &&
+                          this.state.withDropdown === false &&
                             this.props.branch
                         }
                         {
-                          this.state.withDropdown == true &&
+                          this.state.withDropdown === true &&
                           window.sessionStorage.getItem('permission') >= 7 &&
                             <DropdownList render={false} shopchange={this.shopchange} />
                           
                         }{
-                          this.state.withDropdown == true &&
+                          this.state.withDropdown === true &&
                           window.sessionStorage.getItem('permission') < 7 &&
                             this.props.branch
                           

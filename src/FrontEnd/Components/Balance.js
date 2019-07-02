@@ -12,21 +12,7 @@ const dateFormat = 'YYYY-MM-DD';
 const { RangePicker } = DatePicker;
 
 
-const defaultData = [
-  {
-    key:1,
-    "日期":"2019-06-04",
-    "營業額":"2000",
-    "進貨支出":0,
-    "雜支":0
-  },
-  {
-    key:2,
-    "日期":"2019-06-12",
-    "營業額":"1345",
-    "進貨支出":"75",
-    "雜支":"0"
-  }];
+
   class CustomizedLabel extends React.Component {
     render() {
       const {
@@ -37,7 +23,7 @@ const defaultData = [
     }
   }
   
-  class CustomizedAxisTick extends React.Component {
+  /*class CustomizedAxisTick extends React.Component {
     render() {
       const {
         x, y, stroke, payload,
@@ -49,12 +35,12 @@ const defaultData = [
         </g>
       );
     }
-  }
+  }*/
 class BalanceSheet extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      data:defaultData,
+      data:[],
       startDate:moment().add('day',-7).format('YYYY-MM-DD'),
       endDate:moment().format('YYYY-MM-DD'),
       chartWidth:this.props.Width,

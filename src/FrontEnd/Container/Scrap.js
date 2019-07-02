@@ -1,10 +1,9 @@
 import React from 'react';
 import './Scrap.css'
 import { Row, Col, Layout, Button } from 'antd';
-import { List, Icon, Popover, Avatar, InputNumber,notification,Switch } from 'antd';
+import { List, Icon, InputNumber,notification,Switch } from 'antd';
 import axios from 'axios'
-import NumericInput from'../Components/InputNumber'
-import {BrowserRouter as Router,Redirect,} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import moment from 'moment';
 import baseURL from '../Components/AxiosAPI'
 import InfoIcom from '../Components/InfoIcon'
@@ -16,9 +15,6 @@ const openNotificationWithIcon = type => {
   });
 };
 
-var income = [
-  '營業額'
-];
 class ScrapPage extends React.Component{
   constructor(props){
     super(props);

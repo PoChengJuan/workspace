@@ -1,6 +1,6 @@
 import React from 'react';
 import './Statistics.css'
-import { Table, Button, DatePicker } from 'antd';
+import { Table, DatePicker } from 'antd';
 import axios from 'axios'
 import baseURL from './AxiosAPI'
 import moment from 'moment';
@@ -12,7 +12,7 @@ const TotalOrder_columns = [
     title: '品項',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '數量',
@@ -26,7 +26,7 @@ const TotalScrap_columns = [
     title: '品項',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '數量',
@@ -40,7 +40,7 @@ const TotalExpense_columns = [
     title: '項目',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '金額',
@@ -54,7 +54,7 @@ const TotalIncome_columns = [
     title: '',
     dataIndex: 'title',
     key: 'title',
-    render: text => <a href="javascript:;">{text}</a>,
+    render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
     title: '金額',
@@ -96,7 +96,6 @@ class Statistics extends React.Component{
   }
     /***********************MonthPickerFunction********************************************/
   MonthPickerFunction(dates, dateStrings) {
-    var lastmonth;
     window.localStorage.setItem('StatisticsPageDate_Month',dateStrings);
     /*window.localStorage.setItem("AchievingPageDate_Month",dateStrings)
     lastmonth = moment(dateStrings).add('month',-1).format('YYYY-MM');

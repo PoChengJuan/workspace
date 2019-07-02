@@ -5,25 +5,16 @@ import axios from 'axios'
 import baseURL from './AxiosAPI'
 import moment from 'moment';
 import {
-    BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   } from 'recharts';
 const {MonthPicker} = DatePicker;
 const monthFormat = 'YYYY-MM';
-
-  const data = [
-    {
-      name: 'Page A', uv: 4000, pv: 1200, amt: 2400,
-    },
-    {
-      name: 'Page B', uv: 3000, pv: 1398, amt: 2210,
-    }
-  ];
 
 class Achieving extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      data:data,
+      data:[],
       month:moment().format('YYY-MM'),
       chartWidth:this.props.Width,
       chartHeight:500,
