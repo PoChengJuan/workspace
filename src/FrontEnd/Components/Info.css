@@ -6,5 +6,6 @@
     background:#e4f7ff
 }
 .Info .ant-btn{
-    margin-left: 70%;
+    float:right;
+    margin-right: 5%;
 }

@@ -7,6 +7,7 @@ import {
   XAxis, YAxis, CartesianGrid,Tooltip,LineChart,Legend,Line
 } from 'recharts';
 import './StockList.css'
+import Warning from '../Components/Warning.js'
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -161,6 +162,7 @@ class StockList extends React.Component{
             )
         }
       </Select>
+      <Warning page='StockList'/>
       <h3>銷售量</h3>
       <LineChart
         width={this.state.chartWidth}

@@ -176,10 +176,11 @@ class ScrapPage extends React.Component{
         //console.log(moment().format('hh:mm'))
         //console.log(this.state.data)
 
-        axios.put(baseURL+'/ShopData/UpdateScrap/'+response.data[0],{
+        axios.put(baseURL+'/ShopData/UpdateStock/'+response.data[0],{
           name:window.localStorage.getItem('name'),
           time:moment().format('hh:mm'),
-          stock:this.state.data
+          stock:this.state.data,
+          type:"scrap"
         })
         .then( (response) => {
           console.log(response);
@@ -207,7 +208,7 @@ class ScrapPage extends React.Component{
     )
     .then( (response) =>{
       for(var index in response.data){
-        response.data[index].stock = 0;
+        //response.data[index].stock = 0;
         response.data[index].order = 0;
         response.data[index].scrap = 0;
       }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Dropdown, Icon, Layout,Drawer } from 'antd';
+import { Menu, Dropdown, Icon, Layout } from 'antd';
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import '../../App.css'
 import './Main.css'
@@ -12,7 +12,6 @@ import baseURL from '../Components/AxiosAPI'
 import StockList from '../Components/StockList.js'
 import Achieving from '../Components/Achieving.js'
 import Statistics from '../Components/Statistics.js'
-import Warning from '../Components/Warning.js'
 const {
   Header, Footer, Sider, Content,
 } = Layout;
@@ -35,7 +34,9 @@ class MainPage extends React.Component{
       ScrapPage: false,
       isAuth:'',
       Display:'',
-      visible:false}
+      visible:false,
+      warningData:[]
+    }
       this.saveRef = ref => {this.refDom = ref};
   }
   ShopChangeHandle = e => {
@@ -58,7 +59,7 @@ class MainPage extends React.Component{
       {
         path: "/Main",
         exact: true,
-        main: () => <Info Branch={this.state.Branch} Width={1500} showDrawer={this.showDrawer} />
+        main: () => <Info Branch={this.state.Branch} Width={1500} />
       },
       {
         path: '/StockList',
@@ -195,32 +196,12 @@ class MainPage extends React.Component{
               </Router>  
               
             </Layout>
-            <Footer className="Footer"><Warning /></Footer>
+            <Footer className="Footer"></Footer>
         </Layout>
-        <Drawer
-          title="Warning"
-          placement="right"
-          closable={false}
-          onClose={this.onClose}
-          visible={this.state.visible}
-          >
-          <Warning />
-        </Drawer>
         
       </div>
     )
   }
-  showDrawer = () => {
-    this.setState({
-      visible: true,
-    });
-  };
-
-  onClose = () => {
-    this.setState({
-      visible: false,
-    });
-  };
   componentWillMount() {
     console.log('componentWillMount')
     console.log(window.localStorage.getItem('shopname'))

@@ -34,10 +34,19 @@ class Achieving extends React.Component{
         width:'10%',
       },
       {
+        title: '上月庫存',
+        dataIndex: '上月庫存',
+        key: '上月庫存',
+        width:'23%',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.上月庫存 - b.上月庫存,
+        sortOrder: sortedInfo.columnKey === '上月庫存' && sortedInfo.order,
+      },
+      {
         title: '總進貨',
         dataIndex: '總進貨',
         key: '總進貨',
-        width:'30%',
+        width:'22%',
         defaultSortOrder: 'descend',
         sorter: (a, b) => a.總進貨 - b.總進貨,
         sortOrder: sortedInfo.columnKey === '總進貨' && sortedInfo.order,
@@ -46,7 +55,7 @@ class Achieving extends React.Component{
         title: '總銷售',
         dataIndex: '總銷售',
         key: '總銷售',
-        width:'30%',
+        width:'22%',
         sorter: (a, b) => a.總銷售 - b.總銷售,
         sortOrder: sortedInfo.columnKey === '總銷售' && sortedInfo.order,
       },
@@ -54,7 +63,7 @@ class Achieving extends React.Component{
         title: '報廢',
         dataIndex: '報廢',
         key: '報廢',
-        width:'30%',
+        width:'22%',
         sorter: (a, b) => a.報廢 - b.報廢,
         sortOrder: sortedInfo.columnKey === '報廢' && sortedInfo.order,
       }
@@ -83,7 +92,9 @@ class Achieving extends React.Component{
           
           <Bar dataKey="總銷售" stackId="a" fill="#8884d8" />
           <Bar dataKey="報廢" stackId="a" fill="#ff0000" />
-          <Bar dataKey="總進貨" fill="#82ca9d" />
+          <Bar dataKey="總進貨" stackId="b" fill="#82ca9d" />
+          <Bar dataKey="上月庫存" stackId="b" fill="#1E90FF" />
+
         </BarChart>
         <Table columns={columns} dataSource={this.state.data} size='small' pagination={false} scroll={{ y: 240 }} onChange={this.handleChange} />
       </div>
@@ -106,24 +117,8 @@ class Achieving extends React.Component{
       month = moment().format('YYYY-MM');
     }
     lastmonth = moment(month).add('month',-1).format('YYYY-MM');
-    axios.get(baseURL+'/ShopData/getAchieving',
-    {
-      params: {
-        shopname : window.localStorage.getItem('shopname'),
-        branch :  window.localStorage.getItem('branch'),
-        month: month,
-        lastmonth:lastmonth
-      }
-    })
-    .then( (response) =>{
-      this.setState({data:response.data})  
-      console.log(this.state.data)
-    })
-    .catch(function (error) {
-      console.log(error);
-    }); 
-    this.setState({
-      month:month})
+    this.DataUpdate(lastmonth,month);
+    
   }
   /***********************componentWillUnmount********************************************/
   componentWillUnmount(){
@@ -148,12 +143,16 @@ class Achieving extends React.Component{
     var lastmonth;
     window.localStorage.setItem("AchievingPageDate_Month",dateStrings)
     lastmonth = moment(dateStrings).add('month',-1).format('YYYY-MM');
+    this.DataUpdate(lastmonth,dateStrings);
+  }
+  /***********************DataUpdate****************************************************/
+  DataUpdate = (lastmonth,month) => {
     axios.get(baseURL+'/ShopData/getAchieving',
     {
       params: {
         shopname : window.localStorage.getItem('shopname'),
         branch :  window.localStorage.getItem('branch'),
-        month: dateStrings,
+        month: month,
         lastmonth:lastmonth
       }
     })
@@ -165,7 +164,7 @@ class Achieving extends React.Component{
       console.log(error);
     }); 
     this.setState({
-      month:dateStrings})
+      month:month})
   }
 }
 

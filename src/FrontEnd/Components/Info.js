@@ -1,9 +1,9 @@
 import React from 'react';
-import { DatePicker,Table,Button } from 'antd';
+import { DatePicker,Table } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
 import moment from 'moment';
-
+import Warning from '../Components/Warning.js'
 import './Info.css'
 
 const dateFormat = 'YYYY-MM-DD';
@@ -16,17 +16,23 @@ const stock_columns = [
     render: text => <span style={{color:'#1E90FF'}}>{text}</span>,
   },
   {
+    title: '進貨量',
+    dataIndex: 'order',
+    key: 'order',
+    width:'2cm',
+  },
+  {
+    title: '報廢',
+    dataIndex: 'scrap',
+    key: 'scrap',
+    width:'2cm',
+  },
+  {
     title: '庫存',
     dataIndex: 'stock',
     key: 'stock',
     width:'2cm',
   },
-  {
-    title: '叫貨量',
-    dataIndex: 'order',
-    key: 'order',
-    width:'2cm',
-  }
 ];
 const expense_columns = [
   {
@@ -67,22 +73,18 @@ class Info extends React.Component{
           lastUploadDate:testDate,
           stockTableData:'',
           date:'',
-          warning:false
         }      
       }
     render(){
       const{data,expense}=this.state
         return(
-            <div className='Info'>
+            <span className='Info'>
                 <DatePicker
                   defaultValue={moment(this.state.date, dateFormat)} 
                   format={dateFormat} 
                   onChange={this.DatePickerFunction.bind(this)}
                   />
-                  {
-                    this.state.warning &&
-                    <Button className='WarningBtn' type='danger' ghost onClick={this.onClick}>警告</Button>
-                  }
+                  <Warning page='Info' date={window.localStorage.getItem('InfoPageDate')}/>
                 <h2>{
                   //this.state.lastUploadDate
                   }</h2>
@@ -92,13 +94,11 @@ class Info extends React.Component{
                 <Table columns={expense_columns} dataSource={expense} size='small' pagination={false} scroll={{ y: 240 }} />
                 <h3 style={{ marginBottom: 16 }}>收入</h3>
                 <Table columns={income_columns} dataSource={this.state.income} size='small' pagination={false} scroll={{ y: 240 }} />
-            </div>
+            </span>
               
         )
     }
-    onClick = () =>{
-      this.props.showDrawer();
-    }
+    
     DatePickerFunction(dates, dateStrings) {
       console.log(dateStrings)
       window.localStorage.setItem("InfoPageDate",dateStrings)

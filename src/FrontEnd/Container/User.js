@@ -237,7 +237,8 @@ class UserPage extends React.Component{
           time:moment().format('hh:mm'),
           stock:this.state.data,
           expense:this.state.expense,
-          income:this.state.Income
+          income:this.state.Income,
+          type:"stock"
         })
         .then( (response) => {
           console.log(response);
@@ -257,6 +258,9 @@ class UserPage extends React.Component{
 
   componentWillMount() {
     console.log('componentWillMount');
+    if(window.sessionStorage.getItem('isAuth') === null){
+      this.setState({isAuth:'false'})
+    }
     axios.get(baseURL+'/ShopData/getLastStock',
       {
         params: {
