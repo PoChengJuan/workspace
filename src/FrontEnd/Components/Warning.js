@@ -2,7 +2,7 @@ import React from 'react';
 import { Drawer,Button,Typography } from 'antd';
 import axios from 'axios'
 import baseURL from '../Components/AxiosAPI'
-import moment from 'moment';
+//import moment from 'moment';
 
 const { Text } = Typography;
 const { Title } = Typography;
@@ -32,7 +32,9 @@ class Warning extends React.Component{
                   onClose={this.onClose}
                   visible={this.state.visible}
                 >
-                <Title level={4}>{moment(this.props.date).format('YYYY-MM-DD')}</Title>
+                <Title level={4}>{
+                  //moment(this.props.date).format('YYYY-MM-DD')
+                  }</Title>
                 <Title level={4}>庫存不足</Title>
                 {
                     warningData.map(item =>
